@@ -1,0 +1,56 @@
+:root {
+  --vp-c-brand-1: #00c853;
+  --vp-c-brand-2: #00e676;
+  --vp-c-brand-3: #69f0ae;
+  --vp-c-brand-soft: rgba(0, 200, 83, 0.14);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #00c853 30%, #2979ff);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #00c85350 50%, #2979ff50 50%);
+  --vp-home-hero-image-filter: blur(44px);
+}
+
+.dark {
+  --vp-c-brand-1: #00e676;
+  --vp-c-brand-2: #69f0ae;
+  --vp-c-brand-3: #b9f6ca;
+}
+
+/* Image styling for courseware feel */
+.vp-doc img {
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin: 16px 0;
+}
+
+.dark .vp-doc img {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Code block enhancements */
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+}
+
+/* Blockquote accent color */
+.vp-doc blockquote {
+  border-left-color: var(--vp-c-brand-1);
+}
+
+/* Home page feature cards */
+.VPFeatures .VPFeature {
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.VPFeatures .VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Sidebar active item */
+.VPSidebarItem.is-active > .item .link > .text {
+  color: var(--vp-c-brand-1);
+}

@@ -54,6 +54,10 @@ yarn-error.log
 testem.log
 /typings
 
+# VitePress
+docs/.vitepress/cache
+docs/.vitepress/dist
+
 # System Files
 .DS_Store
 Thumbs.db
