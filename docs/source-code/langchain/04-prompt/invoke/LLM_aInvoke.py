@@ -1,13 +1,13 @@
-"""
-【案例】模型调用：异步 ainvoke
+“””
+【案例 04-5】模型调用：异步 ainvoke
 
 对应教程章节：第 13 章 - 提示词与消息模板 → 4、调用大模型的调用方式
 
 知识点速览：
-- `ainvoke` 是 `invoke` 的异步版本，等待模型返回时不会阻塞事件循环。
-- 它适合异步 Web 服务、并发任务和需要同时处理多条请求的场景。
-- 返回结果类型通常仍是 `AIMessage`；只是调用方式从“直接返回”变成了“`await` 后返回”。
-"""
+- ainvoke 是 invoke 的异步版本，等待模型返回时不阻塞事件循环
+- 适合异步 Web 服务、并发任务等场景
+- 返回值仍为 AIMessage，调用方式变为 await
+“””
 
 import os
 import asyncio
@@ -16,7 +16,7 @@ from langchain.chat_models import init_chat_model
 
 load_dotenv()
 
-# ---------- 1. 实例化模型（与同步版本相同）----------
+# ========== 1. 实例化模型 ==========
 model = init_chat_model(
     model="qwen-plus",
     model_provider="openai",
@@ -26,17 +26,14 @@ model = init_chat_model(
 
 
 async def main():
-    """异步主函数：必须用 async def，内部用 await 调用 ainvoke。"""
-    # ---------- 2. 异步调用一条请求 ----------
-    # 这里演示最简单的字符串输入；若需要系统设定、多轮上下文，也可以像同步 invoke 一样传 messages 列表。
-    # await：等待模型返回时不阻塞事件循环，其他协程可同时执行。
+    """异步主函数：用 await 调用 ainvoke。"""
+    # ========== 2. 异步调用 ==========
     response = await model.ainvoke("解释一下LangChain是什么，简洁回答100字以内")
     print(f"响应类型：{type(response)}")
     print(response.content_blocks)
 
 
-# ---------- 3. 运行异步程序 ----------
-# asyncio.run(main()) 会启动事件循环、执行 main()，直到 main() 结束。初学者只需记住：异步入口这样写。
+# ========== 3. 运行异步程序 ==========
 if __name__ == "__main__":
     asyncio.run(main())
 

@@ -1,28 +1,26 @@
-"""
-【案例】环境检查：LangChain 版本与安装路径
+“””
+【案例 01-1】环境检查：LangChain 版本与安装路径
 
 对应教程章节：第 10 章 - LangChain 快速上手与 HelloWorld → 3、安装依赖
 
 知识点速览：
-本脚本用于确认当前 Python 环境中 LangChain、langchain_community 的版本与安装路径，
-便于排查「装错版本」「没进虚拟环境」或「解释器不是当前项目那一个」等问题。无需 API Key，可直接运行。
-"""
+- 通过 __version__ 和 __file__ 快速确认包版本与安装路径
+- 用 sys.executable 排查虚拟环境 / 解释器不一致问题
+- 无需 API Key，可直接运行
+“””
 
-import langchain  # 核心框架（Chain、Agent、Memory 等）
-import langchain_community  # 社区扩展（部分集成、第三方工具等）
-import sys  # 获取 Python 解释器信息
+import langchain
+import langchain_community
+import sys
 
-# LangChain 核心包版本号（需与教程/文档要求的版本区间一致）
-print("langchainVersion:  " + langchain.__version__)
-# 社区扩展包版本号
-print("langchain_communityVersion:  " + langchain_community.__version__)
-# LangChain 实际安装路径（可确认是否来自当前虚拟环境）
-print("langchainfile:" + langchain.__file__)
+print(“langchainVersion:  “ + langchain.__version__)
+print(“langchain_communityVersion:  “ + langchain_community.__version__)
+# 确认包来自当前虚拟环境而非全局安装
+print(“langchainfile:” + langchain.__file__)
 
-# 当前 Python 解释器版本（如 3.10.x），用于确认运行环境
 print(sys.version)
-# 当前 Python 可执行文件路径；当你怀疑“包装到了 A 环境，但运行却走了 B 环境”时尤其有用
-print("pythonExecutable:" + sys.executable)
+# 排查”包装到了 A 环境，但运行走了 B 环境”的问题
+print(“pythonExecutable:” + sys.executable)
 
 """
 【输出示例】

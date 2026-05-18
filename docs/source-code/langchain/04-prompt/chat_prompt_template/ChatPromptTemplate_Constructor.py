@@ -1,14 +1,13 @@
-"""
-【案例】使用构造函数创建 ChatPromptTemplate
+“””
+【案例 04-15】使用构造函数创建 ChatPromptTemplate
 
 对应教程章节：第 13 章 - 提示词与消息模板 → 7、对话提示词模板（ChatPromptTemplate）
 
 知识点速览：
-
-- `ChatPromptTemplate` 用来组织“多角色、多条消息”的输入，天然比 `PromptTemplate` 更贴近聊天模型。
-- 构造函数 `ChatPromptTemplate(messages)` 与 `from_messages(messages)` 本质等价；教程正文里更推荐后者，本文件演示前者。
-- `messages` 里的每一项可以是元组、字典或 Message 类；理解这一点后，后面的参数写法就不容易混乱。
-"""
+- ChatPromptTemplate 组织多角色、多条消息的输入，比 PromptTemplate 更贴近聊天模型
+- 构造函数与 from_messages 本质等价
+- messages 每项可为元组、字典或 Message 类
+“””
 
 from langchain_core.prompts import ChatPromptTemplate
 import os
@@ -18,8 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# 用「元组列表」定义对话结构：system 设定角色，human 表示用户，ai 表示助手回复（可带占位符）
-chatPromptTemplate = ChatPromptTemplate(
+chat_prompt_template = ChatPromptTemplate(
     [
         ("system", "你是一个AI开发工程师，你的名字是{name}。"),
         ("human", "你能帮我做什么?"),
@@ -28,8 +26,7 @@ chatPromptTemplate = ChatPromptTemplate(
     ]
 )
 
-# format_messages：把模板里的占位符替换成实际值，得到「消息列表」，可直接交给 model.invoke(prompt)
-prompt = chatPromptTemplate.format_messages(
+prompt = chat_prompt_template.format_messages(
     name="小谷AI", thing="AI", user_input="7 + 5等于多少"
 )
 print(prompt)
@@ -42,8 +39,6 @@ llm = init_chat_model(
 )
 print()
 print("======================")
-
-# invoke(prompt)：把组装好的消息列表发给模型，返回的 result 是 AIMessage，.content 即模型生成的文本
 result = llm.invoke(prompt)
 print(result)
 print(result.content)

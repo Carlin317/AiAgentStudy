@@ -1,15 +1,13 @@
-"""
-【案例】单智能体最小闭环：create_agent 绑定 LLM 与工具，invoke 传入 messages，观察工具调用与最终回复。
+“””
+【案例 08-1】单智能体最小闭环：create_agent 绑定 LLM 与工具，invoke 传入 messages，观察工具调用与最终回复。
 
 对应教程章节：第 26 章 - LangGraph 多智能体与 A2A → 1、A2A 协议与多智能体架构概览
 
 知识点速览：
-- 这是本章的“对照组”案例：先看单智能体已经能解决什么问题，再理解为什么某些场景并不需要一上来就拆成多智能体。
-- 单智能体：一个模型 + 一组工具，由模型决定何时调工具；适合单领域、小任务、统一入口的助手场景。
-- create_agent 返回的可执行对象底层仍基于 LangGraph；type(agent) 可帮助读者建立“高层 Agent 接口背后仍是图运行时”的认知。
-- 工具函数需清晰 docstring，便于模型理解参数与用途；本案例重点不是天气业务本身，而是“Agent + Tools”的最小闭环。
-- 注释中保留 stream 示例：stream_mode 可取 messages / updates / values / custom，用于和前面 LangGraph Streaming 主线衔接（需取消注释运行）。
-"""
+- 本章”对照组”：先看单智能体能解决什么，再理解为什么某些场景需要多智能体。
+- create_agent 返回的对象底层仍基于 LangGraph 图运行时。
+- 工具函数需清晰 docstring，便于模型理解参数与用途。
+“””
 
 import os
 
@@ -54,8 +52,7 @@ def main():
     print()
     response["messages"][-1].pretty_print()
 
-    # 流式示例（可选）：
-    # stream_mode：messages 流式 token；updates 每步工具；values 整状态快照；custom 配合 get_stream_writer
+    # 流式示例（取消注释运行）：
     # for chunk in agent.stream(
     #     {"messages": [{"role": "user", "content": "请问北京今天天气如何？"}]},
     #     stream_mode="values",

@@ -1,13 +1,11 @@
-"""
-【案例】add_messages Reducer：消息列表专用，节点只返回「增量消息」，由 add_messages 自动追加到 state["messages"]，适合多轮对话与多节点共同写消息的场景。
-
-对应教程章节：第 23 章 - LangGraph API：图与状态 → 3、State 的更新机制：Reducer（规约函数）
+“””
+【案例 03-4】add_messages Reducer：消息列表专用，节点只返回增量消息，自动追加到 state[“messages”]
 
 知识点速览：
-- Annotated[List, add_messages] 表示该字段使用 add_messages 规约：新消息追加到列表末尾，而非覆盖。
-- 节点返回格式可为 [("role", content)] 或 [AIMessage/HumanMessage] 等，由 add_messages 统一合并。
-- 多节点共同写 messages 时，本例重点是“消息按 add_messages 规则合并”，不要把并行分支下的最终顺序直接当成业务契约。
-"""
+- Annotated[List, add_messages]：新消息追加到列表末尾而非覆盖。
+- 节点返回格式可为 [(“role”, content)] 或 [AIMessage/HumanMessage] 等，由 add_messages 统一合并。
+- 并行分支下的消息合并顺序由框架决定，不应作为业务契约。
+“””
 
 from typing import Annotated, List
 from typing_extensions import TypedDict
@@ -15,7 +13,6 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 
 
-# messages 使用 add_messages：节点只返回增量，自动追加
 class AddMessagesState(TypedDict):
     messages: Annotated[List, add_messages]
 

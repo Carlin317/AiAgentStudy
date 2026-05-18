@@ -1,13 +1,13 @@
-"""
-【案例】流式传输图状态：对比 stream_mode 为 updates 与 values 时，每一步向调用方推送的内容差异。
+“””
+【案例 07-1】流式传输图状态：对比 stream_mode 为 updates 与 values 时，每一步推送的内容差异。
 
 对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
 
 知识点速览：
-- `stream(..., stream_mode="updates")`：每步只推送“本节点本次改了什么”，更像增量日志。
-- `stream(..., stream_mode="values")`：每步推送“当前完整状态长什么样”，更像全量快照。
-- 这是理解第 25 章 Streaming 主线的关键案例：同一张图，只是换了流模式，看到的数据视角就完全不同。
-"""
+- stream_mode=”updates”：每步只推送本节点的增量更新。
+- stream_mode=”values”：每步推送当前完整状态快照。
+- 同一张图，换流模式即可获得不同的数据视角。
+“””
 
 from typing import TypedDict
 
@@ -38,13 +38,13 @@ def main():
         .compile()
     )
 
-    # updates：每步结束后只流出「本步对状态的更新」
+    # ========== 1. updates 模式 ==========
     for chunk in graph.stream({"topic": "ice cream"}, stream_mode="updates"):
         print(chunk)
 
     print()
 
-    # values：每步结束后流出「当前完整 state」（未写字段可能仍为空字符串等初始形态）
+    # ========== 2. values 模式 ==========
     for chunk in graph.stream({"topic": "ice cream"}, stream_mode="values"):
         print(chunk)
 

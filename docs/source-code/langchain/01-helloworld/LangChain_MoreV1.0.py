@@ -1,26 +1,20 @@
-"""
-【案例】多模型共存：同一脚本中接入通义与 DeepSeek
+“””
+【案例 01-4】多模型共存：同一脚本中接入通义与 DeepSeek
 
 对应教程章节：第 10 章 - LangChain 快速上手与 HelloWorld → 5、案例：多模型共存（通义 + DeepSeek）
 
 知识点速览：
-- 同一脚本可初始化多个聊天模型实例（不同 model、base_url、api_key），按场景选用或对比调用。
-- 每个实例用 init_chat_model 单独配置，变量名区分（如 llm_qwen、llm_deepseek）便于后续复用。
-- 通义用 model_provider="openai" + 阿里百炼 base_url；DeepSeek 可用 model_provider="deepseek" 或兼容接口。
-
-补充说明：
-- 运行本脚本前，建议已经完成本章前面的单模型 HelloWorld，否则更容易被“多变量、多平台”搞乱。
-- 如果你使用的是 `model_provider="deepseek"` 这种官方 provider 写法，请确保已经安装 `langchain-deepseek`。
-"""
+- 同一脚本可初始化多个模型实例（不同 model、base_url、api_key），按场景选用
+- 通义走 model_provider=”openai” + 阿里百炼 base_url
+- DeepSeek 走 model_provider=”deepseek”（需安装 langchain-deepseek）
+“””
 
 # ========== 1. 导入依赖与环境 ==========
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 import os
 
-load_dotenv(
-    encoding="utf-8"
-)  # 从 .env 加载，建议在 .env 中配置 QWEN_API_KEY、deepseek-api 等
+load_dotenv(encoding=”utf-8”)
 
 # ========== 2. 实例化模型一：通义/百炼（OpenAI 兼容） ==========
 llm_qwen = init_chat_model(
@@ -35,17 +29,14 @@ print(llm_qwen.invoke("你是谁").content)
 print("*" * 70)
 
 # ========== 3. 实例化模型二：DeepSeek 官方 ==========
-# 显式写 model_provider="deepseek" 更稳妥。若接其他厂商（如 OpenAI 兼容），则需写 model_provider="openai"。
 llm_deepseek = init_chat_model(
-    model="deepseek-v4-flash",  # 复杂推理或高质量生成可改用 deepseek-v4-pro
-    model_provider="deepseek",  # 这里走的是 DeepSeek 官方 provider，而不是阿里百炼兼容端点
-    api_key=os.getenv("deepseek-api"),  # .env 中配置 DeepSeek API Key
+    model="deepseek-v4-flash",
+    model_provider="deepseek",  # DeepSeek 官方 provider，非阿里百炼兼容端点
+    api_key=os.getenv("deepseek-api"),
     base_url="https://api.deepseek.com",
 )
 
-# 多模型共存：两个实例可同时保留，按需调用
 print(llm_deepseek.invoke("你是谁").content)
-# 调试时可查看实例属性：print(llm_deepseek.__dict__)
 
 """
 【输出示例】

@@ -1,23 +1,21 @@
-"""
-【案例】模型调用：同步 batch（批量调用）
+“””
+【案例 04-4】模型调用：同步 batch（批量调用）
 
 对应教程章节：第 13 章 - 提示词与消息模板 → 4、调用大模型的调用方式
 
 知识点速览：
-- `batch` 适合一次处理多条彼此独立的输入，常见于离线任务、批量评估、数据清洗等场景。
-- 返回值是与输入顺序一一对应的结果列表；列表中每一项通常仍是 `AIMessage`。
-- 本案例用“字符串列表”演示最简单的批量输入；如果要做多角色批量，也可以传“消息列表的列表”。
-"""
+- batch 一次处理多条独立输入，返回按顺序一一对应的 AIMessage 列表
+- 常见于离线任务、批量评估、数据清洗等场景
+- 也可传”消息列表的列表”实现多角色批量调用
+“””
 
 import os
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 
-# 本示例用「字符串列表」作为 batch 输入，无需 Message 类型；若改为多角色可引入 HumanMessage、SystemMessage
-
 load_dotenv()
 
-# ---------- 1. 实例化模型 ----------
+# ========== 1. 实例化模型 ==========
 model = init_chat_model(
     model="qwen-plus",
     model_provider="openai",
@@ -25,21 +23,18 @@ model = init_chat_model(
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
 
-# ---------- 2. 准备多条独立问题（批量输入的列表）----------
-# 每一条字符串会作为「一次请求」发给模型；batch 会并行处理这些请求，最后返回与之一一对应的响应列表。
+# ========== 2. 准备批量问题 ==========
 questions = [
     "什么是redis?简洁回答，字数控制在100以内",
     "Python的生成器是做什么的？简洁回答，字数控制在100以内",
     "解释一下Docker和Kubernetes的关系?简洁回答，字数控制在100以内",
 ]
 
-# ---------- 3. 批量调用：model.batch(questions) ----------
-# 返回的是一个列表，每个元素对应一条问题的 AIMessage，用 .content 取该条回复的文本。
+# ========== 3. 批量调用 ==========
 response = model.batch(questions)
-print(f"响应类型：{type(response)}")
+print(f”响应类型：{type(response)}”)
 print()
 
-# zip(questions, response)：把“问题列表”和“回答列表”按位置配对，便于一起遍历。
 for q, r in zip(questions, response):
     print(f"问题：{q}\n回答：{r.content}\n")
 

@@ -1,13 +1,12 @@
-"""
-【案例】自定义流（custom）最简版：在节点内通过 get_stream_writer() 写入任意可序列化数据，stream 侧用 custom 接收。
+“””
+【案例 07-3】自定义流（custom）最简版：节点内通过 get_stream_writer() 写入任意可序列化数据，stream 侧用 custom 接收。
 
 对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
 
 知识点速览：
-- 这是 `custom` 模式的最小案例，重点不是业务逻辑，而是先看懂“节点内部怎么主动写出一段流式消息”。
-- `get_stream_writer()` 仅在图执行（stream/astream）过程中有效；调用 `graph.stream` 时，`stream_mode` 里必须包含 `custom`。
-- 自定义块与状态更新是分开的：前者更适合 UI/日志/进度提示，后者仍然通过 State 和 Reducer 管理。
-"""
+- get_stream_writer() 仅在 stream/astream 执行过程中有效；stream_mode 须包含 “custom”。
+- 自定义块与状态更新是两条独立通道：前者适合 UI/日志/进度提示，后者通过 State 和 Reducer 管理。
+“””
 
 from typing import TypedDict
 
@@ -35,8 +34,6 @@ def main():
         .compile()
     )
 
-    # 仅 custom：for chunk in graph.stream({"query": "example"}, stream_mode=["custom"]): print(chunk)
-    # custom + updates：for mode, chunk in graph.stream(..., stream_mode=["updates", "custom"]): ...
     for chunk in graph.stream({"query": "example"}, stream_mode=["values", "custom"]):
         print(chunk)
 

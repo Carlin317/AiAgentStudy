@@ -1,14 +1,14 @@
-"""
-【案例】内存检查点 InMemorySaver：编译图时传入 checkpointer，用 thread_id 区分会话，演示 get_state / get_state_history / 二次 invoke。
+“””
+【案例 07-6】内存检查点 InMemorySaver：编译图时传入 checkpointer，用 thread_id 区分会话，
+演示 get_state / get_state_history / 二次 invoke。
 
 对应教程章节：第 25 章 - LangGraph 高级特性 → 2、状态持久化（Persistence）
 
 知识点速览：
-- compile(checkpointer=...) 后，每次 invoke 会在检查点中留下快照；config["configurable"]["thread_id"] 标识一条「对话线程」。
-- get_state(config) 取当前线程最新状态；get_state_history(config) 取历史快照序列（用于调试或时间回溯）。
-- `InMemorySaver` 数据仅在进程内存中，进程结束即丢失；它最适合先帮助你理解“checkpoint 到底是什么”。
-- 本例最值得观察的是：Persistence 不只是“把结果存起来”，而是把图每一步的状态历史都保留下来，为后面的 Time-Travel 打基础。
-"""
+- compile(checkpointer=...) 后，每次 invoke 在检查点中留下快照；thread_id 标识对话线程。
+- get_state 取最新状态；get_state_history 取历史快照序列，为 Time-Travel 打基础。
+- InMemorySaver 数据仅在进程内存中，进程结束即丢失。
+“””
 
 from typing import Annotated
 
@@ -19,7 +19,6 @@ from typing_extensions import TypedDict
 
 
 class PersistenceDemoState(TypedDict):
-    # operator.add：列表/数值等按「相加」语义合并（列表相当于拼接）
     messages: Annotated[list, operator.add]
     step_count: Annotated[int, operator.add]
 
@@ -87,7 +86,6 @@ def main():
     print(f"保存的状态: {saved_state.values}")
     print(f"下一个节点: {saved_state.next}\n")
 
-    # 正序遍历：从最早到最晚的检查点快照
     history = app.get_state_history(config)
     for checkpoint in history:
         print("=" * 50)
@@ -95,7 +93,6 @@ def main():
 
     print("=" * 80)
     print("3. 恢复执行工作流:")
-    # 工作流若已结束，再次 invoke(None, config) 通常直接返回已落盘的结果
     result2 = app.invoke(None, config)
     print(f"恢复执行结果: {result2}\n")
 

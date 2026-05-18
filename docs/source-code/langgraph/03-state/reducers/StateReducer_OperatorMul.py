@@ -1,13 +1,11 @@
-"""
-【案例】operator.mul 作为 Reducer（数值相乘）的「陷阱」演示：LangGraph 会用类型默认值（float 的 0.0）先做一次规约，导致 0.0 * 初始值 = 0，后续乘法始终为 0；理解后可用自定义 Reducer 解决。
-
-对应教程章节：第 23 章 - LangGraph API：图与状态 → 3、State 的更新机制：Reducer（规约函数）
+“””
+【案例 03-8】operator.mul 作为 Reducer 的「陷阱」演示：float 默认值 0.0 导致首次规约为 0，后续乘法始终为 0
 
 知识点速览：
-- 这个案例的重点不是“operator.mul 不能跑”，而是理解“乘法这类对初始值很敏感的规约逻辑，不能只看 reducer 函数名，还要看首次合并边界”。
-- 当字段默认值是 `0.0` 时，乘法规约很容易在第一次合并就变成 `0.0`，后面再乘什么都还是 `0.0`。
-- 解决方式通常是改成自定义 Reducer，在函数里显式处理首次合并逻辑。参见 `StateReducer_Custom.py`。
-"""
+- 重点是理解对初始值敏感的规约逻辑，不能只看 reducer 函数名，还要看首次合并边界。
+- 字段默认值 0.0 时，0.0 * 初始值 = 0.0，后续无法恢复。
+- 解决方式：改用自定义 Reducer 显式处理首次合并逻辑，参见 StateReducer_Custom.py。
+“””
 
 import operator
 from typing import Annotated
@@ -23,7 +21,7 @@ def multiplier(state: MultiplyState) -> dict:
     return {"factor": 2.0}
 
 
-# 这里故意保留 operator.mul 的“踩坑版”写法，目的是先让你观察问题，再对照 StateReducer_Custom.py 理解为什么真实项目更适合写自定义 Reducer
+# 故意保留 operator.mul 的”踩坑版”写法，对照 StateReducer_Custom.py 理解自定义 Reducer 的价值
 
 
 def run_demo():

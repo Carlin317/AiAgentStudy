@@ -1,24 +1,21 @@
-"""
-【案例】模型调用：异步 abatch（异步批量调用）
+“””
+【案例 04-7】模型调用：异步 abatch（异步批量调用）
 
 对应教程章节：第 13 章 - 提示词与消息模板 → 4、调用大模型的调用方式
 
 知识点速览：
-- `abatch` 是 `batch` 的异步版本，适合把批处理放进异步任务体系中统一调度。
-- 用法是在 `async` 函数内 `await model.abatch(...)`；返回结果与 `batch` 一样，仍按输入顺序一一对应。
-- 如果你当前只是想理解“批量调用”这个概念，先掌握同步版 `batch` 即可。
-"""
+- abatch 是 batch 的异步版本，用于异步任务体系中的批处理
+- 在 async 函数内 await model.abatch(...)，返回顺序与输入一一对应
+“””
 
 import os
 import asyncio
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 
-# abatch 本示例用「字符串列表」作为输入，无需单独导入 Message 类型
-
 load_dotenv()
 
-# ---------- 1. 实例化模型 ----------
+# ========== 1. 实例化模型 ==========
 model = init_chat_model(
     model="qwen-plus",
     model_provider="openai",
@@ -26,7 +23,7 @@ model = init_chat_model(
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
 
-# ---------- 2. 准备批量问题（与同步 batch 相同）----------
+# ========== 2. 准备批量问题 ==========
 questions = [
     "什么是redis?简洁回答，字数控制在100以内",
     "Python的生成器是做什么的？简洁回答，字数控制在100以内",
@@ -34,9 +31,8 @@ questions = [
 ]
 
 
-# ---------- 3. 异步批量调用（在 async 函数中）----------
+# ========== 3. 异步批量调用 ==========
 async def async_batch_call():
-    # await model.abatch(questions)：异步批量处理，返回的仍是「问题与回答一一对应」的列表
     response = await model.abatch(questions)
     print(f"响应类型：{type(response)}")
 
@@ -44,7 +40,7 @@ async def async_batch_call():
         print(f"问题：{q}\n回答：{r.content}\n")
 
 
-# ---------- 4. 运行异步函数 ----------
+# ========== 4. 运行异步函数 ==========
 if __name__ == "__main__":
     asyncio.run(async_batch_call())
 

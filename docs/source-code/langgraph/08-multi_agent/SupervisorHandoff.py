@@ -1,15 +1,14 @@
-"""
-【案例】Handoff：用 Command + Send 把控制权与消息状态交给指定 Agent；create_task_description_handoff_tool 生成「移交」工具，子 Agent 可互相转接。
+“””
+【案例 08-4】Handoff：用 Command + Send 把控制权与消息状态交给指定 Agent；
+create_task_description_handoff_tool 生成移交工具，子 Agent 可互相转接。
 
 对应教程章节：第 26 章 - LangGraph 多智能体与 A2A → 2、多智能体案例：Supervisor 与 Handoff
 
 知识点速览：
-- Handoff 和 Supervisor 的最大区别，不是“也有多个 Agent”，而是“控制权会被正式交给下一位 Agent”，而不是始终由一个中央主管调度。
-- Handoff 与“把子 Agent 当工具调”不同：这里显式构造下一跳输入 state，并用 Command(goto=[Send(...)], graph=Command.PARENT) 跳转到兄弟节点。
-- InjectedState 把当前 MessagesState 注入工具，便于携带对话历史；task_description 充当“交给下一位的工单说明”，这正是 Handoff 里最值得关注的上下文工程。
-- flight_assistant / hotel_assistant 由 create_agent 构建并作为节点加入同一 StateGraph，START 指向默认入口 Agent；这说明 Agent 完全可以作为 LangGraph 图中的节点来组织。
-- @tool 装饰的业务工具仍需 docstring；本案例重点不是预订业务本身，而是观察“状态 + 任务说明 + 下一跳目标”如何一起交接。
-"""
+- Handoff vs Supervisor：控制权被正式交给下一位 Agent，而非始终由中央主管调度。
+- Command(goto=[Send(...)], graph=Command.PARENT) 跳转到兄弟节点，显式构造下一跳输入 state。
+- InjectedState 把 MessagesState 注入工具，携带对话历史；task_description 充当交接工单。
+“””
 
 import os
 from typing import Annotated
@@ -27,9 +26,7 @@ from dotenv import load_dotenv
 load_dotenv(encoding="utf-8")
 
 
-# ===============================
-# 1. 初始化大语言模型
-# ===============================
+# ========== 1. 初始化大语言模型 ==========
 def init_llm_model() -> ChatOpenAI:
     return ChatOpenAI(
         model="qwen-plus",
@@ -43,9 +40,7 @@ def init_llm_model() -> ChatOpenAI:
 model = init_llm_model()
 
 
-# ===============================
-# 2. 通用 Handoff 工具工厂
-# ===============================
+# ========== 2. 通用 Handoff 工具工厂 ==========
 def create_task_description_handoff_tool(
     *, agent_name: str, description: str | None = None
 ):
@@ -76,9 +71,7 @@ def create_task_description_handoff_tool(
     return handoff_tool
 
 
-# ===============================
-# 3. 业务工具（必须有 docstring）
-# ===============================
+# ========== 3. 业务工具 ==========
 @tool("book_flight")
 def book_flight(from_airport: str, to_airport: str) -> str:
     """预订航班，根据出发地和目的地完成机票预订"""
@@ -93,9 +86,7 @@ def book_hotel(hotel_name: str) -> str:
     return f"成功预订了 {hotel_name} 的住宿。"
 
 
-# ===============================
-# 4. Handoff 工具
-# ===============================
+# ========== 4. Handoff 工具 ==========
 transfer_to_flight_assistant = create_task_description_handoff_tool(
     agent_name="flight_assistant",
     description="将任务移交给航班预订助手",
@@ -107,29 +98,21 @@ transfer_to_hotel_assistant = create_task_description_handoff_tool(
 )
 
 
-# ===============================
-# 5. 定义 Agent（create_agent 新接口）
-# 这里不额外写长 prompt，而是更多依赖：
-# 1. 工具 schema / 名称 / docstring
-# 2. Handoff 工具本身描述的交接语义
-# 3. MessagesState 中持续携带的历史消息
-# ===============================
+# ========== 5. 定义 Agent ==========
 flight_assistant = create_agent(
     model=model,
-    tools=[book_flight, transfer_to_hotel_assistant],  # 包含移交工具
+    tools=[book_flight, transfer_to_hotel_assistant],
     name="flight_assistant",
 )
 
 hotel_assistant = create_agent(
     model=model,
-    tools=[book_hotel, transfer_to_flight_assistant],  # 包含移交工具
+    tools=[book_hotel, transfer_to_flight_assistant],
     name="hotel_assistant",
 )
 
 
-# ===============================
-# 6. 构建多 Agent Graph
-# ===============================
+# ========== 6. 构建多 Agent Graph ==========
 multi_agent_graph = (
     StateGraph(MessagesState)
     .add_node(flight_assistant)
@@ -139,9 +122,7 @@ multi_agent_graph = (
 )
 
 
-# ===============================
-# 7. 运行
-# ===============================
+# ========== 7. 运行 ==========
 if __name__ == "__main__":
     result = multi_agent_graph.invoke(
         {

@@ -1,13 +1,12 @@
 """
-【案例】使用 OpenAI 官方 SDK 直接调用大模型（不经过 LangChain）
+【案例 02-1】使用 OpenAI 官方 SDK 直接调用大模型（不经过 LangChain）
 
 对应教程章节：第 11 章 - Model I/O 与模型接入 → 3、接入大模型
 
 知识点速览：
-- 本案例故意不使用 LangChain，目的是帮助你和 `ChatOpenAI`、`init_chat_model` 做边界对比。
-- 适合「仅需简单 API 调用」、暂时不打算接 Prompt、Parser、LCEL、Agent 等 LangChain 组件的场景。
-- 返回结果是 OpenAI SDK 的原生响应结构，不是 LangChain 的 `AIMessage`；读取正文需要走 `response.choices[0].message.content`。
-- 依赖 `openai` 包，运行前在 `.env` 中配置对应平台的 API Key（如 `deepseek-api`）。
+- 原生 OpenAI SDK 调用，与 ChatOpenAI / init_chat_model 做边界对比
+- 返回值是 SDK 原生结构，取正文需 response.choices[0].message.content
+- 适合不需要 Prompt / Chain / Agent 等 LangChain 组件的简单场景
 """
 
 # ========== 1. 导入与环境 ==========
@@ -18,25 +17,21 @@ from dotenv import load_dotenv
 
 load_dotenv(encoding="utf-8")
 
-# ========== 2. 初始化客户端（底层 API，直接请求厂商接口） ==========
-# 这里以 DeepSeek 官方兼容接口为例；若你切到别的 OpenAI 兼容平台，通常只需调整 base_url、api_key、model。
+# ========== 2. 初始化客户端 ==========
 client = OpenAI(
-    api_key=os.getenv("deepseek-api"),  # 从环境变量读取，此处以 DeepSeek 为例
-    base_url="https://api.deepseek.com",  # 可改为其他 OpenAI 兼容地址（如阿里百炼）
+    api_key=os.getenv(“deepseek-api”),
+    base_url=”https://api.deepseek.com”,
 )
 
 # ========== 3. 发起对话并打印回复 ==========
-# 注意：这里的 messages 是 OpenAI SDK 语义下的消息列表，和 LangChain 中常见的“消息列表”长得相似，
-# 但最终返回值结构并不一样。
 response = client.chat.completions.create(
-    model="deepseek-v4-flash",
+    model=”deepseek-v4-flash”,
     messages=[
-        {"role": "system", "content": "You are a helpful assistant"},
-        {"role": "user", "content": "Hello，你是谁？"},
+        {“role”: “system”, “content”: “You are a helpful assistant”},
+        {“role”: “user”, “content”: “Hello，你是谁？”},
     ],
     stream=False,
 )
 
-# OpenAI SDK 的返回值需要按原生结构逐层取值：
-# response -> choices[0] -> message -> content
+# 原生 SDK 的取值路径与 LangChain 的 AIMessage.content 不同
 print(response.choices[0].message.content)

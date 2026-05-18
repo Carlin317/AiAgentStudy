@@ -1,14 +1,13 @@
-"""
-【案例】SQLite 检查点 SqliteSaver：把检查点写入本地 .db 文件，进程重启仍可恢复同 thread_id 的会话。
+“””
+【案例 07-7】SQLite 检查点 SqliteSaver：把检查点写入本地 .db 文件，进程重启仍可恢复同 thread_id 的会话。
 
 对应教程章节：第 25 章 - LangGraph 高级特性 → 2、状态持久化（Persistence）
 
 知识点速览：
-- 依赖包：项目根目录 `requirements.txt` 已包含 `langgraph-checkpoint-sqlite`；全量安装用 `pip install -r requirements.txt`，或单独 `pip install langgraph-checkpoint-sqlite`。生产环境更常用 Postgres（`langgraph-checkpoint-postgres`）等实现。
-- SqliteSaver(conn=...) 与 sqlite3.connect 配合；数据库文件路径需本机可写，目录需事先存在。
-- 与 InMemorySaver 用法相同：`compile(checkpointer=...)`、`invoke(..., config)`、`get_state(config)`，区别主要在于存储介质。
-- 这个案例更像“从学习版持久化走向接近真实部署版”的过渡，重点是理解后端替换而不是 API 换了一套。
-"""
+- 依赖：langgraph-checkpoint-sqlite（生产环境更常用 langgraph-checkpoint-postgres）。
+- 与 InMemorySaver 用法相同，区别仅在存储介质：compile(checkpointer=...) / invoke / get_state。
+- 重点是理解后端可替换，API 保持一致。
+“””
 
 import sqlite3
 import operator
@@ -28,7 +27,6 @@ def node_1(state: MyState):
 
 
 def main():
-    # 默认写在项目旁，避免硬编码 Windows 盘符
     db_dir = Path(__file__).resolve().parent / "sqlite_checkpoints"
     db_dir.mkdir(parents=True, exist_ok=True)
     db_path = db_dir / "sqlite_data.db"
@@ -38,13 +36,11 @@ def main():
 
     builder = StateGraph(MyState)
     builder.add_node("node_1", node_1)
-
     builder.add_edge(START, "node_1")
     builder.add_edge("node_1", END)
 
     graph = builder.compile(checkpointer=sqlite_db)
 
-    # 同一 thread_id 表示同一会话；多次执行会累积检查点，调试时可删 .db 或换 thread_id
     config = {"configurable": {"thread_id": "user-001"}}
 
     initial_state = graph.get_state(config)
@@ -54,7 +50,7 @@ def main():
     print(f"Result: {result}")
 
     print()
-    print("====================查看执行后的状态====================")
+    print("========== 查看执行后的状态 ==========")
     final_state = graph.get_state(config)
     print()
     print(f"Final state: {final_state}")
@@ -70,7 +66,7 @@ if __name__ == "__main__":
 Initial state: StateSnapshot(values={}, next=(), config={'configurable': {'thread_id': 'user-001'}}, metadata=None, created_at=None, parent_config=None, tasks=(), interrupts=())
 Result: {'messages': ['abc', 'def']}
 
-====================查看执行后的状态====================
+========== 查看执行后的状态 ==========
 
 Final state: StateSnapshot(values={'messages': ['abc', 'def']}, next=(), config={'configurable': {'thread_id': 'user-001', 'checkpoint_ns': '', 'checkpoint_id': '1f1272f0-d724-675e-8001-bb885d01bb16'}}, metadata={'source': 'loop', 'step': 1, 'parents': {}}, created_at='2026-03-24T03:10:46.773535+00:00', parent_config={'configurable': {'thread_id': 'user-001', 'checkpoint_ns': '', 'checkpoint_id': '1f1272f0-d723-6a48-8000-d3aac2954c9d'}}, tasks=(), interrupts=())
 """

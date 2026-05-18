@@ -1,14 +1,13 @@
-"""
-【案例】多模式流式传输：同一图依次演示 values、updates、列表组合 [values, updates]、以及 debug 模式。
+“””
+【案例 07-5】多模式流式传输：同一图依次演示 values、updates、列表组合 [values, updates]、以及 debug 模式。
 
 对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
 
 知识点速览：
 - stream_mode 为列表时，每次迭代得到 (mode, chunk) 元组，便于前端按类型分别处理。
-- `values` 看“全貌”，`updates` 看“增量”；`debug` 输出更细，适合调试，不适合直接当业务输出。
-- 这个案例的核心价值是帮你建立“同一张图可以同时暴露多种观察视角”，而不是背住某个模式名。
-- 节点函数返回的字典仍按 State 的 Reducer 合并；本例字段未显式 Annotated，默认就是覆盖更新。
-"""
+- values 看全貌，updates 看增量；debug 适合调试，不适合业务输出。
+- 同一张图可同时暴露多种观察视角。
+“””
 
 from typing import TypedDict
 
@@ -23,14 +22,12 @@ class DiliState(TypedDict):
 
 
 def think(state: DiliState) -> DiliState:
-    """思考节点：模拟多步推理，写入 steps。"""
     question = state["question"]
     steps = [f"分析问题: {question}", "检索相关知识", "形成初步答案"]
     return {"steps": steps}
 
 
 def respond(state: DiliState) -> DiliState:
-    """回应节点：根据关键词生成答案与置信度。"""
     question = state["question"]
     if "天气" in question:
         answer = "今天天气晴朗"
@@ -49,7 +46,6 @@ def respond(state: DiliState) -> DiliState:
 
 
 def reflect(state: DiliState) -> DiliState:
-    """反思节点：在 steps 上追加校验与结论。"""
     answer = state["answer"]
     confidence = state["confidence"]
     steps = state.get("steps", [])
@@ -91,29 +87,25 @@ def main():
         "steps": [],
     }
 
-    print("--- 1. 使用 stream_mode='values' 模式 ---")
-    print("显示每一步执行后的完整状态:")
+    print("========== 1. values 模式 ==========")
     for chunk in graph.stream(input_state, stream_mode="values"):
         print(f"  {chunk}")
 
     print("\n" + "=" * 60 + "\n")
 
-    print("--- 2. 使用 stream_mode='updates' 模式 ---")
-    print("只显示每一步的状态更新:")
+    print("========== 2. updates 模式 ==========")
     for chunk in graph.stream(input_state, stream_mode="updates"):
         print(f"  {chunk}")
 
     print("\n" + "=" * 60 + "\n")
 
-    print("--- 3. 同时使用 stream_mode=[values, updates] 多种流模式 ---")
-    print("同时显示完整状态和状态更新:")
+    print("========== 3. 组合 [values, updates] 模式 ==========")
     for mode, chunk in graph.stream(input_state, stream_mode=["values", "updates"]):
         print(f"  [{mode}]: {chunk}")
 
     print("\n" + "=" * 60 + "\n")
 
-    print("--- 4. 使用 debug 模式 ---")
-    print("显示详细的调试信息:")
+    print("========== 4. debug 模式 ==========")
     try:
         for chunk in graph.stream(input_state, stream_mode="debug"):
             print(f"  {chunk}")
@@ -128,8 +120,7 @@ if __name__ == "__main__":
 【输出示例】
 === LangGraph 多模式流式传输演示 ===
 
---- 1. 使用 stream_mode='values' 模式 ---
-显示每一步执行后的完整状态:
+========== 1. values 模式 ==========
   {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': []}
   {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}
   {'question': '今天天气怎么样?', 'answer': '今天天气晴朗', 'confidence': 0.9, 'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}
@@ -137,16 +128,14 @@ if __name__ == "__main__":
 
 ============================================================
 
---- 2. 使用 stream_mode='updates' 模式 ---
-只显示每一步的状态更新:
+========== 2. updates 模式 ==========
   {'think': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}}
   {'respond': {'answer': '今天天气晴朗', 'confidence': 0.9}}
   {'reflect': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案', '验证答案: 今天天气晴朗', '置信度评估: 0.9', '结论: 高置信度答案']}}
 
 ============================================================
 
---- 3. 同时使用 stream_mode=[values, updates] 多种流模式 ---
-同时显示完整状态和状态更新:
+========== 3. 组合 [values, updates] 模式 ==========
   [values]: {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': []}
   [updates]: {'think': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}}
   [values]: {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}
@@ -157,12 +146,11 @@ if __name__ == "__main__":
 
 ============================================================
 
---- 4. 使用 debug 模式 ---
-显示详细的调试信息:
-  {'step': 1, 'timestamp': '2026-03-23T10:18:42.693927+00:00', 'type': 'task', 'payload': {'id': '11d771f2-98ac-b00c-931e-2b5bcb28f2ec', 'name': 'think', 'input': {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': []}, 'triggers': ('branch:to:think',)}}
-  {'step': 1, 'timestamp': '2026-03-23T10:18:42.693983+00:00', 'type': 'task_result', 'payload': {'id': '11d771f2-98ac-b00c-931e-2b5bcb28f2ec', 'name': 'think', 'error': None, 'result': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}, 'interrupts': []}}
-  {'step': 2, 'timestamp': '2026-03-23T10:18:42.694026+00:00', 'type': 'task', 'payload': {'id': 'a3af09a2-2f1a-d7f5-7957-55d931a52ed7', 'name': 'respond', 'input': {'question': '今天天气怎么样?', 'answer': '', 'confidence': 0.0, 'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}, 'triggers': ('branch:to:respond',)}}
-  {'step': 2, 'timestamp': '2026-03-23T10:18:42.694074+00:00', 'type': 'task_result', 'payload': {'id': 'a3af09a2-2f1a-d7f5-7957-55d931a52ed7', 'name': 'respond', 'error': None, 'result': {'answer': '今天天气晴朗', 'confidence': 0.9}, 'interrupts': []}}
-  {'step': 3, 'timestamp': '2026-03-23T10:18:42.694113+00:00', 'type': 'task', 'payload': {'id': 'c2627962-4fda-05bb-b1f5-5c40e36195a7', 'name': 'reflect', 'input': {'question': '今天天气怎么样?', 'answer': '今天天气晴朗', 'confidence': 0.9, 'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}, 'triggers': ('branch:to:reflect',)}}
-  {'step': 3, 'timestamp': '2026-03-23T10:18:42.694234+00:00', 'type': 'task_result', 'payload': {'id': 'c2627962-4fda-05bb-b1f5-5c40e36195a7', 'name': 'reflect', 'error': None, 'result': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案', '验证答案: 今天天气晴朗', '置信度评估: 0.9', '结论: 高置信度答案']}, 'interrupts': []}}
+========== 4. debug 模式 ==========
+  {'step': 1, 'type': 'task', 'payload': {'name': 'think', ...}}
+  {'step': 1, 'type': 'task_result', 'payload': {'name': 'think', 'result': {'steps': ['分析问题: 今天天气怎么样?', '检索相关知识', '形成初步答案']}, ...}}
+  {'step': 2, 'type': 'task', 'payload': {'name': 'respond', ...}}
+  {'step': 2, 'type': 'task_result', 'payload': {'name': 'respond', 'result': {'answer': '今天天气晴朗', 'confidence': 0.9}, ...}}
+  {'step': 3, 'type': 'task', 'payload': {'name': 'reflect', ...}}
+  {'step': 3, 'type': 'task_result', 'payload': {'name': 'reflect', 'result': {'steps': [...]}, ...}}
 """

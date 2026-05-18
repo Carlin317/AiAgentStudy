@@ -1,15 +1,13 @@
-"""
-【案例】Supervisor（老接口）：langgraph_supervisor.create_supervisor + 子 Agent 使用 langgraph.prebuilt.create_react_agent。
+“””
+【案例 08-2】Supervisor（旧接口）：langgraph_supervisor.create_supervisor + langgraph.prebuilt.create_react_agent。
 
 对应教程章节：第 26 章 - LangGraph 多智能体与 A2A → 2、多智能体案例：Supervisor 与 Handoff
 
 知识点速览：
-- 这是 Supervisor 的历史接口案例，适合帮助读者读懂旧资料与旧仓库代码；今天学习思路应以 SupervisorV1.0.py 为主。
-- Supervisor 的核心不是“子 Agent 有几个”，而是“是否存在唯一主管统一调度”；子 Agent 在这里本质上接近官方文档里的 Subagents。
-- langgraph.prebuilt.create_react_agent 在 LangGraph v1.0+ 已弃用，后续应迁移到 langchain.agents.create_agent（见 SupervisorV1.0.py）。
-- supervisor.stream(...) 按块输出多节点状态；print_chinese_messages 的作用只是弱化英文移交提示，帮助初学者更容易观察主管与子 Agent 的协作过程。
-- 需安装 langgraph-supervisor；模型走 ChatOpenAI 兼容 OpenAI 风格网关，本案例重点是理解 Supervisor 架构，不是关注具体模型厂商。
-"""
+- 历史接口案例，适合读懂旧资料；新代码应以 SupervisorV1.0.py (create_agent) 为主。
+- create_react_agent 在 LangGraph v1.0+ 已弃用，后续应迁移到 langchain.agents.create_agent。
+- Supervisor 核心：是否存在唯一主管统一调度，而非子 Agent 数量。
+“””
 
 import os
 
@@ -23,10 +21,7 @@ load_dotenv(encoding="utf-8")
 
 
 def print_chinese_messages(chunk: dict):
-    """
-    只打印各角色（supervisor / flight_assistant / hotel_assistant）的中文 content，
-    过滤 tool / 空消息 / 英文移交提示。
-    """
+    """过滤 tool / 空消息 / 英文移交提示，只打印中文 content。"""
     if not isinstance(chunk, dict):
         return
 
@@ -49,30 +44,23 @@ def print_chinese_messages(chunk: dict):
 
 
 def init_llm_model() -> ChatOpenAI:
-    """初始化大语言模型（ChatOpenAI）。"""
-    try:
-        model = ChatOpenAI(
-            model="qwen-plus",
-            api_key=os.getenv("aliQwen-api"),
-            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-            temperature=0.1,
-            max_tokens=1024,
-        )
-        print("✅ 语言模型初始化成功")
-        return model
-    except Exception as e:
-        print(f"❌ 语言模型初始化失败：{str(e)}")
-        raise SystemExit(1)
+    return ChatOpenAI(
+        model="qwen-plus",
+        api_key=os.getenv("aliQwen-api"),
+        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        temperature=0.1,
+        max_tokens=1024,
+    )
 
 
 def book_hotel(hotel_name: str):
-    """预订酒店（演示工具）。"""
+    """预订酒店。"""
     print(f"✅ 成功预订了 {hotel_name} 的住宿")
     return f"成功预订了 {hotel_name} 的住宿。"
 
 
 def book_flight(from_airport: str, to_airport: str):
-    """预订航班（演示工具）。"""
+    """预订航班。"""
     print(f"✅ 成功预订了从 {from_airport} 到 {to_airport} 的航班")
     return f"成功预订了从 {from_airport} 到 {to_airport} 的航班。"
 
@@ -134,8 +122,7 @@ def main():
         }
     ):
         print(chunk)
-        print("\n")
-        # 若只想看中文对话摘要，可改用：print_chinese_messages(chunk)
+        print()
 
 
 if __name__ == "__main__":

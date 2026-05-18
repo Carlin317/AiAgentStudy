@@ -1,14 +1,13 @@
-"""
-【案例】invoke / ainvoke 的多种输入类型（字符串、Message 列表、元组列表、字典列表）
+“””
+【案例 04-2】invoke / ainvoke 的多种输入类型（字符串、Message 列表、元组列表、字典列表）
 
 对应教程章节：第 13 章 → 2、调用大模型的入参类型
 
 知识点速览：
-- 聊天模型的 `invoke` 不只接受字符串，也常接受消息对象列表、`(role, content)` 元组列表、
-  `{"role": "...", "content": "..."}` 字典列表。
-- 这些写法的目标都是表达“这次输入由哪些角色、哪些内容组成”；LangChain 会在内部转成统一的消息表示。
-- 初学者若想把角色关系看得最清楚，优先用 `SystemMessage`、`HumanMessage` 等 Message 类写法。
-"""
+- invoke 支持多种输入格式：Message 对象列表、(role, content) 元组列表、字典列表
+- 框架内部统一转为消息表示，输出均为 AIMessage
+- Message 类写法角色最清晰，元组/字典写法更简洁
+“””
 
 import asyncio
 import os

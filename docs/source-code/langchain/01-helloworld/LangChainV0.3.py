@@ -1,47 +1,41 @@
-"""
-【案例】LangChain 0.x 写法：ChatOpenAI + 三种配置方式（硬编码 / 环境变量 / .env）
+“””
+【案例 01-2】LangChain 0.x 写法：ChatOpenAI + 三种配置方式（硬编码 / 环境变量 / .env）
 
 对应教程章节：第 10 章 - LangChain 快速上手与 HelloWorld → 4、实战：基于阿里百炼的 HelloWorld
 
 知识点速览：
-- 0.x 写法从各厂商包直接导入具体类（如 ChatOpenAI），通过 base_url 接国内兼容接口。
-- 配置方式演进：硬编码（不推荐）→ 环境变量 → .env + load_dotenv（推荐），避免 API Key 进版本库。
-- invoke 同步调用、response.content 取回复正文。了解即可，当前主推 1.0 的 init_chat_model 写法。
+- 0.x 写法从厂商包导入具体类（如 ChatOpenAI），通过 base_url 接国内兼容接口
+- 配置方式演进：硬编码 → 环境变量 → .env + load_dotenv（推荐）
+- invoke 同步调用、response.content 取回复正文；了解即可，当前主推 1.0 的 init_chat_model
 
 补充说明：
-- 本脚本虽然放在“阿里百炼 HelloWorld”这一节里，但当前演示模型使用的是部署在阿里百炼兼容端点上的 `deepseek-v3.2`。
-- 重点不在“必须调用哪一个模型”，而在“看懂 0.x/经典写法如何通过 OpenAI 兼容接口完成第一次调用”。
-- 运行前请在项目根目录准备 `.env`；本仓库里 `QWEN_API_KEY` / `aliQwen-api` 都可能指向阿里百炼 Key，这是历史兼容写法。
-"""
+- 当前演示模型为阿里百炼兼容端点上的 deepseek-v3.2，重点在于理解 0.x 经典写法。
+- 运行前请在项目根目录准备 .env；QWEN_API_KEY / aliQwen-api 都可能指向阿里百炼 Key（历史兼容）。
+“””
 
-from langchain_openai import (
-    ChatOpenAI,
-)  # OpenAI 兼容的聊天模型封装，可配合 base_url 接国内平台
+from langchain_openai import ChatOpenAI
 import os
-from dotenv import load_dotenv  # 从 .env 文件加载环境变量，避免把 API Key 写进代码
+from dotenv import load_dotenv
 
 # ========== 1. 大模型客户端初始化（三种配置方式，推荐第 3 版） ==========
 
-# 第 1 版：硬编码写死（仅演示，不推荐）
-# 缺点：API Key 会进版本库，有泄露风险；换环境要改代码。
+# 第 1 版：硬编码（仅演示，API Key 会进版本库，有泄露风险）
 # llm = ChatOpenAI(
 #     model="qwen-plus",
 #     api_key="你自己的api-key",
 #     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
 # )
 
-# 第 2 版：用系统环境变量（需先 export 或在运行前 set）
-# 缺点：若未先 export/set 或未执行 load_dotenv()，代码就可能取到空值。
+# 第 2 版：系统环境变量（需先 export/set，否则可能取到空值）
 # llm = ChatOpenAI(
 #     model="qwen-plus",
 #     api_key=os.getenv("aliQwen-api"),
 #     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
 # )
 
-# 第 3 版（推荐）：用 python-dotenv 从 .env 加载，再通过 os.getenv 读取
-# 项目根目录放 .env 文件，内容如：QWEN_API_KEY=sk-xxx（不要提交到 Git）。
+# 第 3 版（推荐）：python-dotenv 从 .env 加载，再通过 os.getenv 读取
 
-load_dotenv(encoding="utf-8")  # encoding 指定 utf-8，避免 .env 中中文注释乱码
+load_dotenv(encoding="utf-8")
 
 llm = ChatOpenAI(
     model="deepseek-v3.2",  # 模型名需与阿里百炼「模型广场」中的调用名一致
@@ -50,13 +44,11 @@ llm = ChatOpenAI(
 )
 
 # ========== 2. 调用大模型并打印结果 ==========
-# invoke：同步调用，传入用户问题字符串，返回 AIMessage 等消息对象
 response = llm.invoke("你是谁")
 
-# response 为 LangChain 消息对象，包含 content、additional_kwargs 等元数据
-print(response)  # 打印完整对象（含 token 用量、finish_reason 等元数据，便于调试）
+print(response)  # 完整消息对象，含 token 用量等元数据
 print()
-print(response.content)  # 只取「正文」文本，即模型回复内容
+print(response.content)  # 模型回复正文
 
 print()
 

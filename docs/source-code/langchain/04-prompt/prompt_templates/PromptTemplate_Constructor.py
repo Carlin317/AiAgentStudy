@@ -1,13 +1,13 @@
-"""
-【案例】文本提示词模板：用构造函数创建 PromptTemplate
+“””
+【案例 04-9】文本提示词模板：用构造函数创建 PromptTemplate
 
 对应教程章节：第 13 章 - 提示词与消息模板 → 6、文本提示词模板（PromptTemplate）
 
 知识点速览：
-- `PromptTemplate` 适合把“固定句式 + 可变变量”组织成一条可复用的文本提示。
-- 用构造函数创建时，需要显式写出 `template` 和 `input_variables`，因此变量边界更清楚。
-- 这类模板格式化后得到的是字符串，适合作为聊天模型的简单输入，或作为后续链条中的前置文本。
-"""
+- 构造函数需显式写出 template 和 input_variables，变量边界更清楚
+- 格式化后得到字符串，可直接作为模型输入
+- 同一模板可复用，换不同参数得到不同提示词
+“””
 
 import os
 
@@ -17,20 +17,19 @@ from langchain_core.prompts import PromptTemplate
 
 load_dotenv()
 
-# ---------- 1. 用构造函数创建模板 ----------
-# template：整段话里用 {变量名} 表示占位符；input_variables：列出所有需要「每次调用时传入」的变量名
+# ========== 1. 用构造函数创建模板 ==========
 template = PromptTemplate(
     template="你是一个专业的{role}工程师，请回答我的问题给出回答，我的问题是：{question}",
     input_variables=["role", "question"],
 )
 
-# ---------- 2. 用 format 填入占位符，得到一条最终提示词字符串 ----------
+# ========== 2. format 填入占位符 ==========
 prompt = template.format(
     role="python开发", question="冒泡排序怎么写,只要代码其它不要，简洁"
 )
 print(prompt)
 
-# ---------- 3. 将格式化后的字符串发给模型（部分聊天模型支持直接传字符串）----------
+# ========== 3. 将格式化后的字符串发给模型 ==========
 model = init_chat_model(
     model="qwen-plus",
     model_provider="openai",
@@ -41,7 +40,7 @@ result = model.invoke(prompt)
 print(result.content)
 print("\n\n")
 
-# ---------- 4. 同一模板复用：换不同参数得到不同提示词 ----------
+# ========== 4. 同一模板复用 ==========
 template = PromptTemplate(
     template="请评价{product}的优缺点，包括{aspect1}和{aspect2}。",
     input_variables=["product", "aspect1", "aspect2"],

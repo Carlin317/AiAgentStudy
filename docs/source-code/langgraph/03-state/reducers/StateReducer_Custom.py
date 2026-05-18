@@ -1,13 +1,11 @@
-"""
-【案例】自定义 Reducer：用函数签名 (current, update) -> 合并结果，解决 operator.mul 在首次规约边界上不适合直接用于乘法累计的问题。
-
-对应教程章节：第 23 章 - LangGraph API：图与状态 → 3、State 的更新机制：Reducer（规约函数）
+“””
+【案例 03-9】自定义 Reducer：用函数签名 (current, update) -> 合并结果，解决 operator.mul 首次规约边界问题
 
 知识点速览：
-- Reducer 可以写成普通函数：接收当前字段值 `current` 与本次更新值 `update`，返回新的合并结果。
-- 自定义 Reducer 的价值不在“语法复杂”，而在于你可以按业务语义处理首次合并、空值、重复值、顺序稳定性等边界。
-- 节点仍只返回增量（如 `{\"factor\": 2.0}`），真正决定怎么合并的是 Reducer，而不是节点本身。
-"""
+- Reducer 可以是普通函数：接收 current 与 update，返回合并结果。
+- 自定义 Reducer 的价值在于可按业务语义处理首次合并、空值、重复值等边界。
+- 节点仍只返回增量，真正决定合并方式的是 Reducer。
+“””
 
 from typing import Annotated
 
@@ -15,23 +13,20 @@ from langgraph.graph import StateGraph, START, END
 from typing_extensions import TypedDict
 
 
-def MyOperatorMul(current: float, update: float) -> float:
-    """自定义乘法 Reducer：首次合并时把 current 的边界情况单独处理，再继续乘法累计。"""
-    # 第一次调用时 current 往往是类型默认值 0.0，若直接 current * update 会得到 0，后续无法恢复
+def my_operator_mul(current: float, update: float) -> float:
+    """自定义乘法 Reducer：首次合并时 current 为 0.0 需特殊处理。"""
     if current == 0.0:
         print(f"current:{current}")
         print(f"update:{update}")
-        # 等价于从 1.0 开始乘：1.0 * update
         return 1.0 * update
     return current * update
 
 
 class MultiplyState(TypedDict):
-    factor: Annotated[float, MyOperatorMul]
+    factor: Annotated[float, my_operator_mul]
 
 
 def multiplier(state: MultiplyState) -> dict:
-    # 节点返回的 update 会与 state["factor"] 经 MyOperatorMul 合并
     return {"factor": 2.0}
 
 
@@ -43,7 +38,6 @@ def run_demo():
     builder.add_edge("multiplier", END)
     graph = builder.compile()
 
-    # 初始 factor=5.0 与节点返回 2.0 经 Reducer 合并为 5.0 * 2.0 = 10.0
     result = graph.invoke({"factor": 5.0})
     print(f"初始状态: {{'factor': 5.0}}")
     print(f"执行结果: {result}")
