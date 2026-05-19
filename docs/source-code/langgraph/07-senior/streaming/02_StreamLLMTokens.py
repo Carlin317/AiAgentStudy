@@ -1,13 +1,13 @@
-“””
-【案例 07-2】messages 流模式：从图中调用 LLM 的节点逐 token 推送输出，便于打字机效果。
+"""
+[案例 07-2]messages 流模式:从图中调用 LLM 的节点逐 token 推送输出,便于打字机效果.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 1,流式处理(Streaming)
 
-知识点速览：
-- stream_mode=”messages” 时，每次迭代为 (message_chunk, metadata)：chunk 为模型输出片段，metadata 标明来源节点。
-- LangGraph Streaming 不只流状态，也能流模型输出。
-- 需配置环境变量（如 aliQwen-api）与网络。
-“””
+知识点速览:
+- stream_mode="messages" 时,每次迭代为 (message_chunk, metadata):chunk 为模型输出片段,metadata 标明来源节点.
+- LangGraph Streaming 不只流状态,也能流模型输出.
+- 需配置环境变量(如 aliQwen-api)与网络.
+"""
 
 import os
 from typing import TypedDict
@@ -46,7 +46,7 @@ def main():
         StateGraph(state_schema=State).add_node(node).add_edge(START, "node").compile()
     )
 
-    inputs = {"query": "帮我生成一个200字的小学生作文，主题为我的一天"}
+    inputs = {"query": "帮我生成一个200字的小学生作文,主题为我的一天"}
 
     for chunk, _metadata in graph.stream(inputs, stream_mode="messages"):
         print(chunk.content, end="")
@@ -56,10 +56,10 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 (.venv) didilili@DidililiMacBook-Pro streaming % python3 StreamLLMTokens.py
 开始调用 node 节点
 我的一天  
 
-清晨，阳光悄悄爬上窗台，我伸个懒腰起床了！吃完妈妈做的香喷喷的煎蛋和牛奶，背上书包去上学。课堂上，我认真听讲，积极举手回答问题；课间和好朋友跳皮筋、讲故事，笑声像铃铛一样清脆。中午吃食堂的番茄炒蛋盖饭，暖暖的真好吃！放学后，我先完成作业，再陪小猫“团团”玩一会儿毛线球。晚饭后，我和爸爸一起读绘本，妈妈教我折了一只纸鹤，翅膀还微微翘着呢！临睡前，我刷牙洗脸，把小书包整理好，明天还要早起升旗呢！这一天像一颗甜甜的水果糖——有学习的酸、玩耍的甜、家人的暖，还有成长的光。我爱这充实又快乐的一天！（198字）llm invoke 结束
+清晨,阳光悄悄爬上窗台,我伸个懒腰起床了!吃完妈妈做的香喷喷的煎蛋和牛奶,背上书包去上学.课堂上,我认真听讲,积极举手回答问题;课间和好朋友跳皮筋,讲故事,笑声像铃铛一样清脆.中午吃食堂的番茄炒蛋盖饭,暖暖的真好吃!放学后,我先完成作业,再陪小猫"团团"玩一会儿毛线球.晚饭后,我和爸爸一起读绘本,妈妈教我折了一只纸鹤,翅膀还微微翘着呢!临睡前,我刷牙洗脸,把小书包整理好,明天还要早起升旗呢!这一天像一颗甜甜的水果糖——有学习的酸,玩耍的甜,家人的暖,还有成长的光.我爱这充实又快乐的一天!(198字)llm invoke 结束
 """

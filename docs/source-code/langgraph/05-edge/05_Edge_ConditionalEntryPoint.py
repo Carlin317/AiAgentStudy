@@ -1,10 +1,10 @@
-“””
-【案例 05-5】条件入口点：从 START 开始就根据初始输入分支到不同处理节点
+"""
+[案例 05-5]条件入口点:从 START 开始就根据初始输入分支到不同处理节点
 
-知识点速览：
-- add_conditional_edges(START, route_fn, mapping)：invoke 传入的 state 先交给 route_fn，返回值在 mapping 中查下一节点。
-- 与条件边的区别：条件边是节点执行完后分支；条件入口点是图一启动就分支，常用于一级路由。
-“””
+知识点速览:
+- add_conditional_edges(START, route_fn, mapping):invoke 传入的 state 先交给 route_fn,返回值在 mapping 中查下一节点.
+- 与条件边的区别:条件边是节点执行完后分支;条件入口点是图一启动就分支,常用于一级路由.
+"""
 
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -31,19 +31,19 @@ def route_input(state: SimpleState) -> str:
 
 # ========== 3. 处理节点 ==========
 def handle_greeting(state: SimpleState) -> SimpleState:
-    state["response"] = "你好！很高兴见到你！"
+    state["response"] = "你好!很高兴见到你!"
     state["node_visited"] = "greeting_node"
     return state
 
 
 def handle_farewell(state: SimpleState) -> SimpleState:
-    state["response"] = "再见！祝你有个美好的一天！"
+    state["response"] = "再见!祝你有个美好的一天!"
     state["node_visited"] = "farewell_node"
     return state
 
 
 def handle_question(state: SimpleState) -> SimpleState:
-    state["response"] = "我听到了你的问题，需要更多帮助吗？"
+    state["response"] = "我听到了你的问题,需要更多帮助吗?"
     state["node_visited"] = "question_node"
     return state
 
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
 
 """
-【输出示例】
+[输出示例]
 简单条件入口点示例
 ========================================
 
@@ -111,19 +111,19 @@ if __name__ == "__main__":
 ------------------------------
 路由决策: greeting
 访问的节点: greeting_node
-响应: 你好！很高兴见到你！
+响应: 你好!很高兴见到你!
 
 输入: Goodbye now
 ------------------------------
 路由决策: farewell
 访问的节点: farewell_node
-响应: 再见！祝你有个美好的一天！
+响应: 再见!祝你有个美好的一天!
 
 输入: What time is it?
 ------------------------------
 路由决策: question
 访问的节点: question_node
-响应: 我听到了你的问题，需要更多帮助吗？
+响应: 我听到了你的问题,需要更多帮助吗?
 
                               +-----------+                                
                               | __start__ |.                               

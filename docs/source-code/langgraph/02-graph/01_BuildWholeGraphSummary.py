@@ -1,11 +1,11 @@
-“””
-【案例 02-1】多节点、固定边的完整图：input → process → output 三个节点，演示图的完整搭建流程
+"""
+[案例 02-1]多节点,固定边的完整图:input → process → output 三个节点,演示图的完整搭建流程
 
-知识点速览：
-- StateGraph(GraphState) 指定状态类型后，各节点接收完整 state，返回「部分更新」字典。
-- 未为字段指定 Reducer 时默认覆盖：后一节点返回的 process_data 会覆盖前一节点的值。
-- 固定边：add_edge 依次串联 START → input → process → output → END，执行顺序确定。
-“””
+知识点速览:
+- StateGraph(GraphState) 指定状态类型后,各节点接收完整 state,返回"部分更新"字典.
+- 未为字段指定 Reducer 时默认覆盖:后一节点返回的 process_data 会覆盖前一节点的值.
+- 固定边:add_edge 依次串联 START → input → process → output → END,执行顺序确定.
+"""
 
 from typing import TypedDict
 from langgraph.constants import START, END
@@ -60,7 +60,7 @@ print(app.get_graph().draw_mermaid())
 
 
 """
-【输出示例】
+[输出示例]
 input_node 节点执行 state.get('process_data'): {'name': '测试数据', 'value': 123456}
 process_node 节点执行 state.get('process_data'): {'input': 'input_value'}
 output_node 节点执行 state.get('process_data'): {'process': 'process_value9527'}

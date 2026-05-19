@@ -1,13 +1,13 @@
-“””
-【案例 07-1】流式传输图状态：对比 stream_mode 为 updates 与 values 时，每一步推送的内容差异。
+"""
+[案例 07-1]流式传输图状态:对比 stream_mode 为 updates 与 values 时,每一步推送的内容差异.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 1,流式处理(Streaming)
 
-知识点速览：
-- stream_mode=”updates”：每步只推送本节点的增量更新。
-- stream_mode=”values”：每步推送当前完整状态快照。
-- 同一张图，换流模式即可获得不同的数据视角。
-“””
+知识点速览:
+- stream_mode="updates":每步只推送本节点的增量更新.
+- stream_mode="values":每步推送当前完整状态快照.
+- 同一张图,换流模式即可获得不同的数据视角.
+"""
 
 from typing import TypedDict
 
@@ -52,7 +52,7 @@ def main():
 if __name__ == "__main__":
     main()
 """
-【输出示例】
+[输出示例]
 {'refine_topic': {'topic': 'ice cream and cats'}}
 {'generate_joke': {'joke': 'This is a joke about ice cream and cats'}}
 

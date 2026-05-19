@@ -1,9 +1,9 @@
 """
-【案例 03-6】operator.add 作为 Reducer（字符串）：对字符串字段做拼接
+[案例 03-6]operator.add 作为 Reducer(字符串):对字符串字段做拼接
 
-知识点速览：
-- Annotated[str, operator.add]：语义为字符串拼接，即 current + update。
-- 适合多节点产出文本片段、最后拼成完整文案的场景。
+知识点速览:
+- Annotated[str, operator.add]:语义为字符串拼接,即 current + update.
+- 适合多节点产出文本片段,最后拼成完整文案的场景.
 """
 
 import operator
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     run_demo()
 
 """
-【输出示例】
+[输出示例]
 3.2 字符串连接 Reducer 演示:
 初始状态: {'text': 'Say: '}
 执行结果: {'text': 'Say: Hello World!'}

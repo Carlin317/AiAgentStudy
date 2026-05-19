@@ -1,13 +1,13 @@
-“””
-【案例 07-7】SQLite 检查点 SqliteSaver：把检查点写入本地 .db 文件，进程重启仍可恢复同 thread_id 的会话。
+"""
+[案例 07-7]SQLite 检查点 SqliteSaver:把检查点写入本地 .db 文件,进程重启仍可恢复同 thread_id 的会话.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 2、状态持久化（Persistence）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 2,状态持久化(Persistence)
 
-知识点速览：
-- 依赖：langgraph-checkpoint-sqlite（生产环境更常用 langgraph-checkpoint-postgres）。
-- 与 InMemorySaver 用法相同，区别仅在存储介质：compile(checkpointer=...) / invoke / get_state。
-- 重点是理解后端可替换，API 保持一致。
-“””
+知识点速览:
+- 依赖:langgraph-checkpoint-sqlite(生产环境更常用 langgraph-checkpoint-postgres).
+- 与 InMemorySaver 用法相同,区别仅在存储介质:compile(checkpointer=...) / invoke / get_state.
+- 重点是理解后端可替换,API 保持一致.
+"""
 
 import sqlite3
 import operator
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 Initial state: StateSnapshot(values={}, next=(), config={'configurable': {'thread_id': 'user-001'}}, metadata=None, created_at=None, parent_config=None, tasks=(), interrupts=())
 Result: {'messages': ['abc', 'def']}
 

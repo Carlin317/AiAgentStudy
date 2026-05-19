@@ -1,12 +1,12 @@
-“””
-【案例 01-3】接入大模型的最小对话图：用户消息 → model 节点 → 模型回复写回 messages
+"""
+[案例 01-3]接入大模型的最小对话图:用户消息 → model 节点 → 模型回复写回 messages
 
-知识点速览：
-- add_messages：LangGraph 内置 Reducer，语义是”把新消息追加进历史消息”而非覆盖。
-- messages 字段写成 Annotated[List, add_messages] 后，节点只需 return {“messages”: [reply]}，历史对话不会丢失。
-- model_node(state) 把 state[“messages”] 交给 llm.invoke(...)，节点本质上只是调用 LangChain 模型的普通函数。
-- 图结构：START → model → END；invoke 传入初始 messages，从 result[“messages”][-1].content 读取回复。
-“””
+知识点速览:
+- add_messages:LangGraph 内置 Reducer,语义是"把新消息追加进历史消息"而非覆盖.
+- messages 字段写成 Annotated[List, add_messages] 后,节点只需 return {"messages": [reply]},历史对话不会丢失.
+- model_node(state) 把 state["messages"] 交给 llm.invoke(...),节点本质上只是调用 LangChain 模型的普通函数.
+- 图结构:START → model → END;invoke 传入初始 messages,从 result["messages"][-1].content 读取回复.
+"""
 
 import json
 import os
@@ -22,7 +22,7 @@ load_dotenv(encoding="utf-8")
 
 # ========== 1. 定义状态 ==========
 class DiliState(TypedDict):
-    # add_messages：追加语义，节点只返回增量消息，框架自动合并到列表末尾；不用则会覆盖历史
+    # add_messages:追加语义,节点只返回增量消息,框架自动合并到列表末尾;不用则会覆盖历史
     messages: Annotated[List, add_messages]
 
 
@@ -50,13 +50,13 @@ graph.add_edge("model", END)
 # ========== 5. 编译并执行 ==========
 app = graph.compile()
 result = app.invoke(
-    {"messages": [HumanMessage(content="请用一句话解释什么是 LangGraph。")]}
+    {"messages": [HumanMessage(content="请用一句话解释什么是 LangGraph.")]}
 )
-# 或: result = app.invoke({"messages": "请用一句话解释什么是 LangGraph。"})
+# 或: result = app.invoke({"messages": "请用一句话解释什么是 LangGraph."})
 
-print("模型回答：", result["messages"][-1].content)
+print("模型回答:", result["messages"][-1].content)
 
-# 格式化输出 result：default 把消息对象转成 dict，不可序列化类型用 str 兜底
+# 格式化输出 result:default 把消息对象转成 dict,不可序列化类型用 str 兜底
 print("\n--- result 格式化输出 ---")
 print(
     json.dumps(
@@ -77,12 +77,12 @@ print("=" * 50)
 # output_path = "langgraph" + str(uuid.uuid4())[:8] + ".png"
 # with open(output_path, "wb") as f:
 #     f.write(png_bytes)
-# print(f"图片已生成：{output_path}")
+# print(f"图片已生成:{output_path}")
 
 
 """
-【输出示例】
-模型回答： LangGraph 是一个基于图（Graph）的框架，用于构建具有状态、记忆和循环逻辑的复杂 AI 代理（Agent）工作流，它扩展自 LangChain，通过节点（Nodes）和边（Edges）定义可暂停、恢复、带状态的有向图执行流程，特别适合实现多步骤推理、工具调用、人工干预和长期对话等动态场景。
+[输出示例]
+模型回答: LangGraph 是一个基于图(Graph)的框架,用于构建具有状态,记忆和循环逻辑的复杂 AI 代理(Agent)工作流,它扩展自 LangChain,通过节点(Nodes)和边(Edges)定义可暂停,恢复,带状态的有向图执行流程,特别适合实现多步骤推理,工具调用,人工干预和长期对话等动态场景.
 
 
 --- result 格式化输出 ---
@@ -91,7 +91,7 @@ print("=" * 50)
     {
       "type": "human",
       "data": {
-        "content": "请用一句话解释什么是 LangGraph。",
+        "content": "请用一句话解释什么是 LangGraph.",
         "additional_kwargs": {},
         "response_metadata": {},
         "type": "human",
@@ -102,7 +102,7 @@ print("=" * 50)
     {
       "type": "ai",
       "data": {
-        "content": "LangGraph 是一个基于图（Graph）的框架，用于构建具有状态、记忆和循环逻辑的复杂 AI 代理（Agent）工作流，它扩展自 LangChain，通过节点（Nodes）和边（Edges）定义可暂停、恢复、带状态的有向图执行流程，特别适合实现多步骤推理、工具调用、人工干预和长期对话等动态场景。",
+        "content": "LangGraph 是一个基于图(Graph)的框架,用于构建具有状态,记忆和循环逻辑的复杂 AI 代理(Agent)工作流,它扩展自 LangChain,通过节点(Nodes)和边(Edges)定义可暂停,恢复,带状态的有向图执行流程,特别适合实现多步骤推理,工具调用,人工干预和长期对话等动态场景.",
         "additional_kwargs": {
           "refusal": null
         },

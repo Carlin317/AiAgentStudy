@@ -1,10 +1,10 @@
-“””
-【案例 05-4】条件边（字符串路由键）：路由函数返回字符串 key，在 mapping 中映射到不同节点
+"""
+[案例 05-4]条件边(字符串路由键):路由函数返回字符串 key,在 mapping 中映射到不同节点
 
-知识点速览：
-- add_conditional_edges(START, route_fn, {“key1”: “node1”, ...})：路由函数返回字符串与 mapping 的 key 匹配。
-- 适合多分支入口：根据初始 state 决定第一跳。
-“””
+知识点速览:
+- add_conditional_edges(START, route_fn, {"key1": "node1", ...}):路由函数返回字符串与 mapping 的 key 匹配.
+- 适合多分支入口:根据初始 state 决定第一跳.
+"""
 
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, List, Annotated
@@ -67,7 +67,7 @@ print()
 print(app.get_graph().draw_mermaid())
 
 """
-【输出示例】
+[输出示例]
 addition3 收到: {'x': 3}
 最后的结果是: {'x': 6}
                 +-----------+                  

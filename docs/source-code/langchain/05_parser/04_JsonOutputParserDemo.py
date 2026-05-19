@@ -1,12 +1,12 @@
 """
-【案例 05-4】JsonOutputParser 基础用法：在提示词中直接要求返回 JSON
+[案例 05-4]JsonOutputParser 基础用法:在提示词中直接要求返回 JSON
 
-对应教程章节：第 14 章 - 输出解析器 → 2、常用输出解析器用法
+对应教程章节:第 14 章 - 输出解析器 → 2,常用输出解析器用法
 
-知识点速览：
+知识点速览:
 - JsonOutputParser 将模型文本输出解析为 dict / list
-- 本案例在 system 提示词中手写格式要求，适合结构简单的场景
-- 进阶做法见 JsonOutputParser_GetFormatInstructions.py：用 get_format_instructions() 自动生成格式说明
+- 本案例在 system 提示词中手写格式要求,适合结构简单的场景
+- 进阶做法见 JsonOutputParser_GetFormatInstructions.py:用 get_format_instructions() 自动生成格式说明
 """
 
 from langchain_core.output_parsers import JsonOutputParser
@@ -19,19 +19,19 @@ from loguru import logger
 load_dotenv(encoding="utf-8")
 
 # ========== 1. 构造对话模板 ==========
-# 在 system 消息中直接写明：返回 json，包含 q（问题）、a（答案）字段
+# 在 system 消息中直接写明:返回 json,包含 q(问题),a(答案)字段
 chat_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "你是一个{role}，请简短回答我提出的问题，结果返回json格式，q字段表示问题，a字段表示答案。",
+            "你是一个{role},请简短回答我提出的问题,结果返回json格式,q字段表示问题,a字段表示答案.",
         ),
         ("human", "请回答:{question}"),
     ]
 )
 
 prompt = chat_prompt.invoke(
-    {"role": "AI助手", "question": "什么是LangChain，简洁回答100字以内"}
+    {"role": "AI助手", "question": "什么是LangChain,简洁回答100字以内"}
 )
 logger.info(prompt)
 
@@ -47,7 +47,7 @@ model = init_chat_model(
 result = model.invoke(prompt)
 logger.info(f"模型原始输出:\n{result}")
 
-# 不绑 Pydantic 时，解析结果为 dict/list
+# 不绑 Pydantic 时,解析结果为 dict/list
 parser = JsonOutputParser()
 response = parser.invoke(result)
 logger.info(f"解析后的结构化结果:\n{response}")

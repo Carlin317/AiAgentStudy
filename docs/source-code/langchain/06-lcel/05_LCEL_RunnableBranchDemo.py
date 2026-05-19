@@ -1,10 +1,10 @@
 """
-【案例 06-5】分支链：根据输入条件选择不同子链执行
+[案例 06-5]分支链:根据输入条件选择不同子链执行
 
-对应教程章节：第 15 章 - LCEL 与链式调用 → 4.2 RunnableBranch（分支链）
+对应教程章节:第 15 章 - LCEL 与链式调用 → 4.2 RunnableBranch(分支链)
 
-知识点速览：
-- RunnableBranch 按顺序判断 (条件, Runnable) 对，命中的第一条分支被执行
+知识点速览:
+- RunnableBranch 按顺序判断 (条件, Runnable) 对,命中的第一条分支被执行
 - 最后一个未成对的 Runnable 为默认分支
 - 每个分支内部仍可是 prompt | model | parser 顺序链
 """
@@ -37,7 +37,7 @@ korean_prompt = ChatPromptTemplate.from_messages(
 
 # ========== 2. 语言检测函数 ==========
 def determine_language(inputs):
-    """根据 query 中的关键词判断目标语言。"""
+    """根据 query 中的关键词判断目标语言."""
     query = inputs["query"]
     if "日语" in query:
         return "japanese"

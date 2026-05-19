@@ -1,13 +1,13 @@
 """
-【案例 05-5】JsonOutputParser + get_format_instructions()：用格式说明引导模型输出
+[案例 05-5]JsonOutputParser + get_format_instructions():用格式说明引导模型输出
 
-对应教程章节：第 14 章 - 输出解析器 → 2、常用输出解析器用法
+对应教程章节:第 14 章 - 输出解析器 → 2,常用输出解析器用法
 
-知识点速览：
-- get_format_instructions() 返回一段格式说明，描述期望的 JSON 结构（键名、类型等）
-- 将说明拼入 Prompt 的 {format_instructions} 占位符，可显著降低模型输出格式错误的概率
+知识点速览:
+- get_format_instructions() 返回一段格式说明,描述期望的 JSON 结构(键名,类型等)
+- 将说明拼入 Prompt 的 {format_instructions} 占位符,可显著降低模型输出格式错误的概率
 - 绑定 Pydantic 模型后 get_format_instructions() 会自动根据 schema 生成说明
-- 当前 JsonOutputParser 解析结果仍为 dict；若需 Pydantic 实例，见 StructuredOutput_Pydantic.py
+- 当前 JsonOutputParser 解析结果仍为 dict;若需 Pydantic 实例,见 StructuredOutput_Pydantic.py
 """
 
 from langchain_core.output_parsers import JsonOutputParser
@@ -22,7 +22,7 @@ load_dotenv(encoding="utf-8")
 
 
 class Person(BaseModel):
-    """新闻条目结构：时间、人物、事件。"""
+    """新闻条目结构:时间,人物,事件."""
 
     time: str = Field(description="时间")
     person: str = Field(description="人物")
@@ -36,8 +36,8 @@ format_instructions = parser.get_format_instructions()
 # ========== 2. 构造对话模板 ==========
 chat_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "你是一个AI助手，你只能输出结构化JSON数据。"),
-        ("human", "请生成一个关于{topic}的新闻。{format_instructions}"),
+        ("system", "你是一个AI助手,你只能输出结构化JSON数据."),
+        ("human", "请生成一个关于{topic}的新闻.{format_instructions}"),
     ]
 )
 

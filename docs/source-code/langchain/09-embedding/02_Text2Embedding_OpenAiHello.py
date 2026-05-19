@@ -1,8 +1,8 @@
 """
-【案例 09-2】OpenAI 兼容接口调用阿里百炼 Embedding（Hello 级）
+[案例 09-2]OpenAI 兼容接口调用阿里百炼 Embedding(Hello 级)
 
-知识点速览：
-- 同一类 Embedding 能力可通过 OpenAI 兼容协议调用，切换厂商时只需调整 base_url/api_key/model
+知识点速览:
+- 同一类 Embedding 能力可通过 OpenAI 兼容协议调用,切换厂商时只需调整 base_url/api_key/model
 - client.embeddings.create() 的 input 可以是单字符串或字符串列表
 - 返回结果中 data[i].embedding 即为向量
 """
@@ -27,7 +27,7 @@ completion = client.embeddings.create(model="text-embedding-v4", input=input_tex
 print(completion.model_dump_json())
 
 """
-【输出示例】
-注：embedding 共 1024 维度，即 len(completion.data[0].embedding) == 1024
+[输出示例]
+注:embedding 共 1024 维度,即 len(completion.data[0].embedding) == 1024
 {"data":[{"embedding":[0.02258586511015892,-0.08700370043516159,...],"index":0,"object":"embedding"}],"model":"text-embedding-v4","object":"list","usage":{"prompt_tokens":6,"total_tokens":6},"id":"37989997-27b1-9416-98af-091ae0b5c118"}
 """

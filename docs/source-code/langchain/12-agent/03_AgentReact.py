@@ -1,11 +1,11 @@
 """
-【案例 12-3】ReAct 模式：推理 + 行动的多步工具调用（产品搜索与库存查询）
+[案例 12-3]ReAct 模式:推理 + 行动的多步工具调用(产品搜索与库存查询)
 
-知识点速览：
-- ReAct（Reason + Act）：先推理，再行动，再根据结果继续推理，是 Agent 最经典的入门机制
-- 本案例提供 search_products 和 check_inventory 两个 Tool，Agent 自主决定调用顺序与次数
-- 通过 result["messages"] 可追踪完整对话：AIMessage(tool_calls) -> ToolMessage -> 最终 AIMessage
-- 使用 create_agent + 本地 @tool 路线；MCP 方式见 11-mcp/McpClientAgent.py
+知识点速览:
+- ReAct(Reason + Act):先推理,再行动,再根据结果继续推理,是 Agent 最经典的入门机制
+- 本案例提供 search_products 和 check_inventory 两个 Tool,Agent 自主决定调用顺序与次数
+- 通过 result["messages"] 可追踪完整对话:AIMessage(tool_calls) -> ToolMessage -> 最终 AIMessage
+- 使用 create_agent + 本地 @tool 路线;MCP 方式见 11-mcp/McpClientAgent.py
 """
 
 import os
@@ -103,13 +103,13 @@ model = ChatOpenAI(
 agent = create_agent(
     model,
     tools=[search_products, check_inventory],
-    system_prompt="""你是电商助手，遵循ReAct模式：
+    system_prompt="""你是电商助手,遵循ReAct模式:
     1. 先推理用户需求
     2. 选择合适的工具执行操作
     3. 基于工具结果进行下一步推理
     4. 重复直到获得完整答案
 
-    保持推理步骤简洁明了。""",
+    保持推理步骤简洁明了.""",
 )
 
 # ========== 4. 测试 ==========
@@ -129,7 +129,7 @@ for msg in result["messages"]:
 print("=" * 40)
 
 
-# ========== 5. 可选：逐条解析 ReAct 循环 ==========
+# ========== 5. 可选:逐条解析 ReAct 循环 ==========
 def track_react_cycle(messages):
     print("ReAct 循环步骤分析:")
     step = 1

@@ -1,13 +1,13 @@
 """
-【案例 07-6】Redis 持久化对话历史：RunnableWithMessageHistory + RedisChatMessageHistory
+[案例 07-6]Redis 持久化对话历史:RunnableWithMessageHistory + RedisChatMessageHistory
 
-对应教程章节：第 16 章 - 记忆与对话历史 → 6、案例代码 → 6.2 持久化：Redis 存储
+对应教程章节:第 16 章 - 记忆与对话历史 → 6,案例代码 → 6.2 持久化:Redis 存储
 
-知识点速览：
+知识点速览:
 - 与内存版的区别仅在于 get_session_history() 返回 RedisChatMessageHistory 而非 InMemoryChatMessageHistory
-- RunnableWithMessageHistory 负责读写时机，RedisChatMessageHistory 负责存储后端
-- 优先使用 langchain-redis 包；若未安装则自动回退到 langchain-community 的实现
-- 默认连接 redis://localhost:6379，可通过环境变量 REDIS_URL 覆盖
+- RunnableWithMessageHistory 负责读写时机,RedisChatMessageHistory 负责存储后端
+- 优先使用 langchain-redis 包;若未安装则自动回退到 langchain-community 的实现
+- 默认连接 redis://localhost:6379,可通过环境变量 REDIS_URL 覆盖
 """
 
 from dotenv import load_dotenv
@@ -38,16 +38,16 @@ FORCE_SAVE = os.getenv("REDIS_FORCE_SAVE", "0") == "1"
 
 
 def _check_redis():
-    """启动时检查 Redis 是否可达。"""
+    """启动时检查 Redis 是否可达."""
     try:
         r = redis.Redis.from_url(REDIS_URL, decode_responses=True)
         r.ping()
         r.close()
     except (redis.ConnectionError, redis.ResponseError) as e:
         logger.error(
-            "Redis 连接失败（{}）。请先启动 Redis，例如：\n"
+            "Redis 连接失败({}).请先启动 Redis,例如:\n"
             "  docker run -d -p 6379:6379 redis\n"
-            "若使用其他端口，可设置环境变量：REDIS_URL=redis://localhost:端口",
+            "若使用其他端口,可设置环境变量:REDIS_URL=redis://localhost:端口",
             REDIS_URL,
         )
         raise SystemExit(1) from e
@@ -57,8 +57,8 @@ _check_redis()
 
 redis_client = redis.Redis.from_url(REDIS_URL, decode_responses=True)
 logger.info(
-    "Redis 历史实现：{} | REDIS_URL={}",
-    "langchain-redis" if USE_LANGCHAIN_REDIS else "langchain-community（兼容回退）",
+    "Redis 历史实现:{} | REDIS_URL={}",
+    "langchain-redis" if USE_LANGCHAIN_REDIS else "langchain-community(兼容回退)",
     REDIS_URL,
 )
 
@@ -75,7 +75,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
-    """为每个 session_id 返回对应的 Redis 历史实例。"""
+    """为每个 session_id 返回对应的 Redis 历史实例."""
     if USE_LANGCHAIN_REDIS:
         return RedisChatMessageHistory(
             session_id=session_id,
@@ -96,9 +96,9 @@ chain = RunnableWithMessageHistory(
 config = RunnableConfig(configurable={"session_id": "user-001"})
 
 # ========== 3. 交互式对话 ==========
-print("开始对话（输入 'quit' 退出）")
+print("开始对话(输入 'quit' 退出)")
 while True:
-    question = input("\n输入问题：")
+    question = input("\n输入问题:")
     if question.lower() in ["quit", "exit", "q"]:
         break
     response = chain.invoke({"question": question}, config)

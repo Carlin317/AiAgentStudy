@@ -1,14 +1,14 @@
-“””
-【案例 08-4】Handoff：用 Command + Send 把控制权与消息状态交给指定 Agent；
-create_task_description_handoff_tool 生成移交工具，子 Agent 可互相转接。
+"""
+[案例 08-4]Handoff:用 Command + Send 把控制权与消息状态交给指定 Agent;
+create_task_description_handoff_tool 生成移交工具,子 Agent 可互相转接.
 
-对应教程章节：第 26 章 - LangGraph 多智能体与 A2A → 2、多智能体案例：Supervisor 与 Handoff
+对应教程章节:第 26 章 - LangGraph 多智能体与 A2A → 2,多智能体案例:Supervisor 与 Handoff
 
-知识点速览：
-- Handoff vs Supervisor：控制权被正式交给下一位 Agent，而非始终由中央主管调度。
-- Command(goto=[Send(...)], graph=Command.PARENT) 跳转到兄弟节点，显式构造下一跳输入 state。
-- InjectedState 把 MessagesState 注入工具，携带对话历史；task_description 充当交接工单。
-“””
+知识点速览:
+- Handoff vs Supervisor:控制权被正式交给下一位 Agent,而非始终由中央主管调度.
+- Command(goto=[Send(...)], graph=Command.PARENT) 跳转到兄弟节点,显式构造下一跳输入 state.
+- InjectedState 把 MessagesState 注入工具,携带对话历史;task_description 充当交接工单.
+"""
 
 import os
 from typing import Annotated
@@ -50,7 +50,7 @@ def create_task_description_handoff_tool(
     @tool(name, description=description)
     def handoff_tool(
         task_description: Annotated[
-            str, "描述下一个 Agent 应该做什么，包括所有必要信息"
+            str, "描述下一个 Agent 应该做什么,包括所有必要信息"
         ],
         state: Annotated[MessagesState, InjectedState],
     ) -> Command:
@@ -74,16 +74,16 @@ def create_task_description_handoff_tool(
 # ========== 3. 业务工具 ==========
 @tool("book_flight")
 def book_flight(from_airport: str, to_airport: str) -> str:
-    """预订航班，根据出发地和目的地完成机票预订"""
+    """预订航班,根据出发地和目的地完成机票预订"""
     print(f"✅ 成功预订了从 {from_airport} 到 {to_airport} 的航班")
-    return f"成功预订了从 {from_airport} 到 {to_airport} 的航班。"
+    return f"成功预订了从 {from_airport} 到 {to_airport} 的航班."
 
 
 @tool("book_hotel")
 def book_hotel(hotel_name: str) -> str:
-    """预订酒店，根据酒店名称完成预订"""
+    """预订酒店,根据酒店名称完成预订"""
     print(f"✅ 成功预订了 {hotel_name} 的住宿")
-    return f"成功预订了 {hotel_name} 的住宿。"
+    return f"成功预订了 {hotel_name} 的住宿."
 
 
 # ========== 4. Handoff 工具 ==========
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     result = multi_agent_graph.invoke(
         {
             "messages": [
-                HumanMessage(content="帮我预订从北京到上海的航班，并预订如家酒店")
+                HumanMessage(content="帮我预订从北京到上海的航班,并预订如家酒店")
             ]
         }
     )
@@ -138,13 +138,13 @@ if __name__ == "__main__":
             print(msg.content)
 
 """
-【输出示例】
+[输出示例]
 ✅ 成功预订了从 北京 到 上海 的航班
 ✅ 成功预订了 如家酒店 的住宿
 
 ====== 最终对话结果 ======
-帮我预订从北京到上海的航班，并预订如家酒店
+帮我预订从北京到上海的航班,并预订如家酒店
 预订如家酒店
 
-如家酒店已成功预订！如有其他需求，欢迎随时告知。
+如家酒店已成功预订!如有其他需求,欢迎随时告知.
 """

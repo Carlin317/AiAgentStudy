@@ -1,13 +1,13 @@
-“””
-【案例 07-5】多模式流式传输：同一图依次演示 values、updates、列表组合 [values, updates]、以及 debug 模式。
+"""
+[案例 07-5]多模式流式传输:同一图依次演示 values,updates,列表组合 [values, updates],以及 debug 模式.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 1,流式处理(Streaming)
 
-知识点速览：
-- stream_mode 为列表时，每次迭代得到 (mode, chunk) 元组，便于前端按类型分别处理。
-- values 看全貌，updates 看增量；debug 适合调试，不适合业务输出。
-- 同一张图可同时暴露多种观察视角。
-“””
+知识点速览:
+- stream_mode 为列表时,每次迭代得到 (mode, chunk) 元组,便于前端按类型分别处理.
+- values 看全貌,updates 看增量;debug 适合调试,不适合业务输出.
+- 同一张图可同时暴露多种观察视角.
+"""
 
 from typing import TypedDict
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === LangGraph 多模式流式传输演示 ===
 
 ========== 1. values 模式 ==========

@@ -1,11 +1,11 @@
-“””
-【案例 03-10】多种 Reducer 并存：messages 用 add_messages、tags 用 operator.add 拼接列表、score 用 operator.add 做数值累加
+"""
+[案例 03-10]多种 Reducer 并存:messages 用 add_messages,tags 用 operator.add 拼接列表,score 用 operator.add 做数值累加
 
-知识点速览：
-- 同一份 State 里不同字段可配置不同 Reducer：字段定义是一层，合并方式是另一层。
-- add_messages：增量追加；operator.add 作用于列表时拼接，作用于 float 时加法累加。
-- invoke 里可传 OpenAI 风格的 {“role”, “content”} 字典，运行时会转为 Message 对象。
-“””
+知识点速览:
+- 同一份 State 里不同字段可配置不同 Reducer:字段定义是一层,合并方式是另一层.
+- add_messages:增量追加;operator.add 作用于列表时拼接,作用于 float 时加法累加.
+- invoke 里可传 OpenAI 风格的 {"role", "content"} 字典,运行时会转为 Message 对象.
+"""
 
 from typing import Annotated, List
 
@@ -22,7 +22,7 @@ class ChatState(TypedDict):
 
 
 def process_user_message(state: ChatState) -> dict:
-    # dict 入参在运行时已转为 HumanMessage 等对象，须用 .content 读正文
+    # dict 入参在运行时已转为 HumanMessage 等对象,须用 .content 读正文
     user_message = state["messages"][-1]
     return {
         "messages": [("assistant", f"Echo: {user_message.content}")],
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     run_demo()
 
 """
-【输出示例】
+[输出示例]
 {'messages': [HumanMessage(content='Hello, how are you?', additional_kwargs={}, response_metadata={}, id='4350252b-ace7-429a-8cc8-67d232d91f42'), AIMessage(content='Echo: Hello, how are you?', additional_kwargs={}, response_metadata={}, id='ab394788-89d0-45f2-a6b0-5252a448ebb1', tool_calls=[], invalid_tool_calls=[])], 'tags': ['greeting', 'processed', 'positive'], 'score': 1.5}
 """

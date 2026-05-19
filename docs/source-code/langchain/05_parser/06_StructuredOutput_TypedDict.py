@@ -1,11 +1,11 @@
 """
-【案例 05-6】用 TypedDict + Annotated 做结构化输出
+[案例 05-6]用 TypedDict + Annotated 做结构化输出
 
-对应教程章节：第 14 章 - 输出解析器 → 3、结构化输出（TypedDict / Pydantic / Annotated）
+对应教程章节:第 14 章 - 输出解析器 → 3,结构化输出(TypedDict / Pydantic / Annotated)
 
-知识点速览：
-- with_structured_output(类型) 让模型按指定结构生成并自动解析，无需手写 Parser
-- TypedDict + Annotated 可为字段添加描述元数据，帮助模型理解各字段含义
+知识点速览:
+- with_structured_output(类型) 让模型按指定结构生成并自动解析,无需手写 Parser
+- TypedDict + Annotated 可为字段添加描述元数据,帮助模型理解各字段含义
 - 调用 .invoke() 后直接得到符合结构的 dict
 """
 
@@ -36,13 +36,13 @@ class AnimalList(TypedDict):
 
 
 # ========== 3. 绑定结构化输出并调用 ==========
-messages = [{"role": "user", "content": "任意生成三种动物，以及它们的 emoji 表情"}]
+messages = [{"role": "user", "content": "任意生成三种动物,以及它们的 emoji 表情"}]
 
 llm_with_structured_output = llm.with_structured_output(AnimalList)
 resp = llm_with_structured_output.invoke(messages)
 print(resp)
 
 """
-【输出示例】
+[输出示例]
 {'animals': [{'animal': '狗', 'emoji': '🐶'}, {'animal': '猫', 'emoji': '🐱'}, {'animal': '鸟', 'emoji': '🐦'}]}
 """

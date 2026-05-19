@@ -1,11 +1,11 @@
-“””
-【案例 05-2】入口点与出口点：set_entry_point / set_finish_point，等价于 add_edge(START, node) 与 add_edge(node, END)
+"""
+[案例 05-2]入口点与出口点:set_entry_point / set_finish_point,等价于 add_edge(START, node) 与 add_edge(node, END)
 
-知识点速览：
-- set_entry_point(node_id)：底层等价于 add_edge(START, node_id)。
-- set_finish_point(node_id)：底层等价于 add_edge(node_id, END)。
-- 适合单入口单出口的图，减少重复写 START/END 边。
-“””
+知识点速览:
+- set_entry_point(node_id):底层等价于 add_edge(START, node_id).
+- set_finish_point(node_id):底层等价于 add_edge(node_id, END).
+- 适合单入口单出口的图,减少重复写 START/END 边.
+"""
 
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === 入口点演示 ===
 执行节点A
 state[value]:0

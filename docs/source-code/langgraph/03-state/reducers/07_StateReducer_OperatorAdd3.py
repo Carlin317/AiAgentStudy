@@ -1,9 +1,9 @@
 """
-【案例 03-7】operator.add 作为 Reducer（数值）：对数值字段做累加
+[案例 03-7]operator.add 作为 Reducer(数值):对数值字段做累加
 
-知识点速览：
-- Annotated[int, operator.add]：语义为数值加法，即 current + update。
-- 初始状态提供起点（如 count: 10），各节点返回 {"count": 增量}，最终为累加结果。
+知识点速览:
+- Annotated[int, operator.add]:语义为数值加法,即 current + update.
+- 初始状态提供起点(如 count: 10),各节点返回 {"count": 增量},最终为累加结果.
 """
 
 import operator
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     run_demo()
 
 """
-【输出示例】
+[输出示例]
 3.3 数值累加 Reducer 演示:
 初始状态: {'count': 10}
 执行结果: {'count': 18}

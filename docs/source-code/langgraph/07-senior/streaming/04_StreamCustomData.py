@@ -1,13 +1,13 @@
-“””
-【案例 07-4】自定义流 + 状态更新组合：节点内多次 writer() 推送进度，同时返回 dict 更新 State；
-演示 custom / updates / 组合三种消费方式。
+"""
+[案例 07-4]自定义流 + 状态更新组合:节点内多次 writer() 推送进度,同时返回 dict 更新 State;
+演示 custom / updates / 组合三种消费方式.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 1,流式处理(Streaming)
 
-知识点速览：
-- get_stream_writer() 推送的 custom 数据不会自动进 State；节点写回状态的仍然是 return 的 dict。
-- stream_mode=[“custom”, “updates”] 时，迭代得到 (mode, chunk)，适合前端同时展示进度和状态。
-“””
+知识点速览:
+- get_stream_writer() 推送的 custom 数据不会自动进 State;节点写回状态的仍然是 return 的 dict.
+- stream_mode=["custom", "updates"] 时,迭代得到 (mode, chunk),适合前端同时展示进度和状态.
+"""
 
 from typing import TypedDict
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === LangGraph 自定义数据流式传输演示 ===
 
 ========== 1. 单独使用 custom 流模式 ==========

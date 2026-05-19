@@ -1,11 +1,11 @@
 """
-【案例 05-7】PydanticOutputParser：用 Pydantic 模型定义输出结构并校验
+[案例 05-7]PydanticOutputParser:用 Pydantic 模型定义输出结构并校验
 
-对应教程章节：第 14 章 - 输出解析器 → 3、结构化输出（TypedDict / Pydantic / Annotated）
+对应教程章节:第 14 章 - 输出解析器 → 3,结构化输出(TypedDict / Pydantic / Annotated)
 
-知识点速览：
-- PydanticOutputParser 解析结果为 Pydantic 实例，可利用 field_validator 做运行时校验
-- 与 JsonOutputParser 的区别：JsonOutputParser 返回 dict，PydanticOutputParser 返回强类型对象
+知识点速览:
+- PydanticOutputParser 解析结果为 Pydantic 实例,可利用 field_validator 做运行时校验
+- 与 JsonOutputParser 的区别:JsonOutputParser 返回 dict,PydanticOutputParser 返回强类型对象
 - 适合需要强类型和校验失败明确报错的场景
 """
 
@@ -21,7 +21,7 @@ load_dotenv(encoding="utf-8")
 
 
 class Product(BaseModel):
-    """产品信息：名称、类别、简介。"""
+    """产品信息:名称,类别,简介."""
 
     name: str = Field(description="产品名称")
     category: str = Field(description="产品类别")
@@ -29,7 +29,7 @@ class Product(BaseModel):
 
     @field_validator("description")
     def validate_description(cls, value):
-        """description 长度必须 >= 10，否则抛 ValueError。"""
+        """description 长度必须 >= 10,否则抛 ValueError."""
         if len(value) < 10:
             raise ValueError("产品简介长度必须大于等于10")
         return value
@@ -42,8 +42,8 @@ format_instructions = parser.get_format_instructions()
 # ========== 2. 构造对话模板 ==========
 prompt_template = ChatPromptTemplate.from_messages(
     [
-        ("system", "你是一个AI助手，你只能输出结构化的json数据\n{format_instructions}"),
-        ("human", "请你输出标题为：{topic}的新闻内容"),
+        ("system", "你是一个AI助手,你只能输出结构化的json数据\n{format_instructions}"),
+        ("human", "请你输出标题为:{topic}的新闻内容"),
     ]
 )
 
@@ -64,7 +64,7 @@ model = init_chat_model(
 result = model.invoke(prompt)
 logger.info(f"模型原始输出:\n{result.content}")
 
-# 解析为 Product 实例，校验不通过会抛错
+# 解析为 Product 实例,校验不通过会抛错
 response = parser.invoke(result)
 logger.info(f"解析后的结构化结果:\n{response}")
 logger.info(f"结果类型: {type(response)}")  # <class '__main__.Product'>

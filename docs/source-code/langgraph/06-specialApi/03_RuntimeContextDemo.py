@@ -1,14 +1,14 @@
-“””
-【案例 06-3】Runtime 与 context_schema：创建图时传入 context_schema，invoke 时传入 context，
-节点函数接收 (state, runtime)，通过 runtime.context 访问配置，实现「配置与状态分离」。
+"""
+[案例 06-3]Runtime 与 context_schema:创建图时传入 context_schema,invoke 时传入 context,
+节点函数接收 (state, runtime),通过 runtime.context 访问配置,实现"配置与状态分离".
 
-对应教程章节：第 24 章 - LangGraph API：节点、边与进阶 → 3、Send、Command 与 Runtime 上下文
+对应教程章节:第 24 章 - LangGraph API:节点,边与进阶 → 3,Send,Command 与 Runtime 上下文
 
-知识点速览：
-- StateGraph(State, context_schema=ContextSchema)：运行时配置不进入 state，适合放模型名、连接串、密钥等。
-- 节点签名 (state, runtime: Runtime[ContextSchema])：runtime.context 即 invoke 时传入的配置对象，类型安全。
-- 核心意识：业务数据走 State，环境配置走 Runtime Context。
-“””
+知识点速览:
+- StateGraph(State, context_schema=ContextSchema):运行时配置不进入 state,适合放模型名,连接串,密钥等.
+- 节点签名 (state, runtime: Runtime[ContextSchema]):runtime.context 即 invoke 时传入的配置对象,类型安全.
+- 核心意识:业务数据走 State,环境配置走 Runtime Context.
+"""
 
 from typing import Annotated
 from typing_extensions import TypedDict
@@ -46,7 +46,7 @@ def process_message(state: AgentState, runtime: Runtime[ContextSchema]) -> dict:
     print(f"数据库连接: {db_connection}")
     print(f"API密钥前缀: {api_key[:5]}***")
 
-    response = f"使用 {model_name} 处理了您的请求，已连接到 {db_connection}"
+    response = f"使用 {model_name} 处理了您的请求,已连接到 {db_connection}"
 
     return {"messages": [AIMessage(content=response)], "response": response}
 
@@ -58,7 +58,7 @@ def generate_response(state: AgentState, runtime: Runtime[ContextSchema]) -> dic
     print(f"使用模型 {model_name} 生成最终响应")
 
     previous_response = state["response"]
-    final_response = f"{previous_response}\n\n这是使用 {model_name} 生成的完整响应。"
+    final_response = f"{previous_response}\n\n这是使用 {model_name} 生成的完整响应."
 
     return {"messages": [AIMessage(content=final_response)], "response": final_response}
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === Context Schema 演示 ===
 
 初始状态: {'messages': [HumanMessage(content='请帮我查询最新的订单信息', additional_kwargs={}, response_metadata={})], 'response': ''}
@@ -132,10 +132,10 @@ API密钥前缀: sk-ab***
 使用模型 gpt-4-turbo 生成最终响应
 
 ==================================================
-最终状态: {'messages': [HumanMessage(content='请帮我查询最新的订单信息', additional_kwargs={}, response_metadata={}), AIMessage(content='使用 gpt-4-turbo 处理了您的请求，已连接到 postgresql://user:pass@localhost:5432/orders_db', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[]), AIMessage(content='使用 gpt-4-turbo 处理了您的请求，已连接到 postgresql://user:pass@localhost:5432/orders_db\n\n这是使用 gpt-4-turbo 生成的完整响应。', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])], 'response': '使用 gpt-4-turbo 处理了您的请求，已连接到 postgresql://user:pass@localhost:5432/orders_db\n\n这是使用 gpt-4-turbo 生成的完整响应。'}
+最终状态: {'messages': [HumanMessage(content='请帮我查询最新的订单信息', additional_kwargs={}, response_metadata={}), AIMessage(content='使用 gpt-4-turbo 处理了您的请求,已连接到 postgresql://user:pass@localhost:5432/orders_db', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[]), AIMessage(content='使用 gpt-4-turbo 处理了您的请求,已连接到 postgresql://user:pass@localhost:5432/orders_db\n\n这是使用 gpt-4-turbo 生成的完整响应.', additional_kwargs={}, response_metadata={}, tool_calls=[], invalid_tool_calls=[])], 'response': '使用 gpt-4-turbo 处理了您的请求,已连接到 postgresql://user:pass@localhost:5432/orders_db\n\n这是使用 gpt-4-turbo 生成的完整响应.'}
 
 最终响应:
-使用 gpt-4-turbo 处理了您的请求，已连接到 postgresql://user:pass@localhost:5432/orders_db
+使用 gpt-4-turbo 处理了您的请求,已连接到 postgresql://user:pass@localhost:5432/orders_db
 
-这是使用 gpt-4-turbo 生成的完整响应。
+这是使用 gpt-4-turbo 生成的完整响应.
 """

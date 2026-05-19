@@ -1,14 +1,14 @@
-“””
-【案例 07-6】内存检查点 InMemorySaver：编译图时传入 checkpointer，用 thread_id 区分会话，
-演示 get_state / get_state_history / 二次 invoke。
+"""
+[案例 07-6]内存检查点 InMemorySaver:编译图时传入 checkpointer,用 thread_id 区分会话,
+演示 get_state / get_state_history / 二次 invoke.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 2、状态持久化（Persistence）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 2,状态持久化(Persistence)
 
-知识点速览：
-- compile(checkpointer=...) 后，每次 invoke 在检查点中留下快照；thread_id 标识对话线程。
-- get_state 取最新状态；get_state_history 取历史快照序列，为 Time-Travel 打基础。
-- InMemorySaver 数据仅在进程内存中，进程结束即丢失。
-“””
+知识点速览:
+- compile(checkpointer=...) 后,每次 invoke 在检查点中留下快照;thread_id 标识对话线程.
+- get_state 取最新状态;get_state_history 取历史快照序列,为 Time-Travel 打基础.
+- InMemorySaver 数据仅在进程内存中,进程结束即丢失.
+"""
 
 from typing import Annotated
 
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === LangGraph 1.0 内存持久化存储演示 ===
 
 1. 首次执行工作流:

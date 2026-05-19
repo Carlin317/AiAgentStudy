@@ -1,11 +1,11 @@
 """
-【案例 08-3】加法工具（Pydantic 版）：用 args_schema 绑定参数模型
+[案例 08-3]加法工具(Pydantic 版):用 args_schema 绑定参数模型
 
-对应教程章节：第 17 章 - Tools 工具调用 → 4、参数 schema：为什么要配合 Pydantic
+对应教程章节:第 17 章 - Tools 工具调用 → 4,参数 schema:为什么要配合 Pydantic
 
-知识点速览：
-- args_schema 将参数语义说明显式暴露给模型，提升参数生成正确率
-- Field 的 description 会进入工具参数 schema，模型可据此理解每个参数的含义
+知识点速览:
+- args_schema 将参数语义说明显式暴露给模型,提升参数生成正确率
+- Field 的 description 会进入工具参数 schema,模型可据此理解每个参数的含义
 - 工具整体用途说明仍应写在函数 docstring 中
 """
 from langchain_core.tools import tool

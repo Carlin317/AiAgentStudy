@@ -1,14 +1,14 @@
-“””
-【案例 08-3】Supervisor（推荐接口）：子 Agent 用 create_agent，主管用 create_supervisor；
-交互式输入 + 流式输出 + 简单中文过滤。
+"""
+[案例 08-3]Supervisor(推荐接口):子 Agent 用 create_agent,主管用 create_supervisor;
+交互式输入 + 流式输出 + 简单中文过滤.
 
-对应教程章节：第 26 章 - LangGraph 多智能体与 A2A → 2、多智能体案例：Supervisor 与 Handoff
+对应教程章节:第 26 章 - LangGraph 多智能体与 A2A → 2,多智能体案例:Supervisor 与 Handoff
 
-知识点速览：
-- 用 create_agent 定义子 Agent，由 create_supervisor 统一调度，贴近当前主流写法。
-- create_supervisor(...).compile() 得到可 stream/invoke 的图；主管 prompt 约束调度流程与角色边界。
-- filter_messages 为教学辅助，弱化英文移交提示和噪声。
-“””
+知识点速览:
+- 用 create_agent 定义子 Agent,由 create_supervisor 统一调度,贴近当前主流写法.
+- create_supervisor(...).compile() 得到可 stream/invoke 的图;主管 prompt 约束调度流程与角色边界.
+- filter_messages 为教学辅助,弱化英文移交提示和噪声.
+"""
 
 import os
 import re
@@ -34,12 +34,12 @@ def init_llm_model() -> ChatOpenAI:
 
 # ========== 2. 工具函数 ==========
 def book_flight(from_airport: str, to_airport: str) -> str:
-    """预订航班工具。根据出发机场和到达机场预订一张机票，并返回预订结果。"""
+    """预订航班工具.根据出发机场和到达机场预订一张机票,并返回预订结果."""
     return f"✅ 成功预订了从 {from_airport} 到 {to_airport} 的航班"
 
 
 def book_hotel(hotel_name: str) -> str:
-    """预订酒店工具。根据酒店名称完成酒店预订，并返回预订结果。"""
+    """预订酒店工具.根据酒店名称完成酒店预订,并返回预订结果."""
     return f"✅ 成功预订了 {hotel_name} 的住宿"
 
 
@@ -57,13 +57,13 @@ supervisor = create_supervisor(
     agents=[flight_assistant, hotel_assistant],
     model=init_llm_model(),
     prompt=(
-        "你是旅行预订系统的调度主管，负责协调航班预订和酒店预订。\n\n"
-        "当用户提出航班和酒店预订请求时，你的工作流程是：\n"
+        "你是旅行预订系统的调度主管,负责协调航班预订和酒店预订.\n\n"
+        "当用户提出航班和酒店预订请求时,你的工作流程是:\n"
         "1. 首先调用flight_assistant来预订航班\n"
         "2. 然后调用hotel_assistant来预订酒店\n"
-        "3. 收到两个助手的结果后，汇总并向用户报告\n"
+        "3. 收到两个助手的结果后,汇总并向用户报告\n"
         "4. 完成后结束对话\n\n"
-        "重要规则：\n"
+        "重要规则:\n"
         "- 每个助手只能调用一次\n"
         "- 不要重复任何内容\n"
         "- 不要输出任何英文\n"
@@ -93,7 +93,7 @@ def filter_messages(chunk: dict) -> str:
                         ):
 
                             chinese_content = re.sub(
-                                r'[^\u4e00-\u9fff，。！？：；""、\s\d✅]', "", content
+                                r'[^\u4e00-\u9fff,.!?:;"",\s\d✅]', "", content
                             )
                             if chinese_content and len(chinese_content.strip()) > 5:
                                 output += f"{role}: {chinese_content.strip()}\n"
@@ -108,29 +108,29 @@ def main():
     print("=" * 60)
     print()
 
-    print("请按顺序提供以下信息：")
+    print("请按顺序提供以下信息:")
     print("-" * 40)
 
-    from_airport = input("1. 您的出发机场是哪里？: ").strip()
+    from_airport = input("1. 您的出发机场是哪里?: ").strip()
     while not from_airport:
         print("请输入有效的出发机场名称")
-        from_airport = input("1. 您的出发机场是哪里？: ").strip()
+        from_airport = input("1. 您的出发机场是哪里?: ").strip()
 
-    to_airport = input("\n2. 您的到达机场是哪里？: ").strip()
+    to_airport = input("\n2. 您的到达机场是哪里?: ").strip()
     while not to_airport:
         print("请输入有效的到达机场名称")
-        to_airport = input("2. 您的到达机场是哪里？: ").strip()
+        to_airport = input("2. 您的到达机场是哪里?: ").strip()
 
-    hotel_name = input("\n3. 您要预订的酒店名称是什么？: ").strip()
+    hotel_name = input("\n3. 您要预订的酒店名称是什么?: ").strip()
     while not hotel_name:
         print("请输入有效的酒店名称")
-        hotel_name = input("3. 您要预订的酒店名称是什么？: ").strip()
+        hotel_name = input("3. 您要预订的酒店名称是什么?: ").strip()
 
     user_request = (
-        f"请帮我预订以下旅行安排：\n"
-        f"1. 航班：从 {from_airport} 飞往 {to_airport}\n"
-        f"2. 酒店：{hotel_name}\n"
-        f"请完成这两个预订。"
+        f"请帮我预订以下旅行安排:\n"
+        f"1. 航班:从 {from_airport} 飞往 {to_airport}\n"
+        f"2. 酒店:{hotel_name}\n"
+        f"请完成这两个预订."
     )
 
     print("\n" + "=" * 60)
@@ -154,9 +154,9 @@ def main():
 
         if len(seen_contents) < 2:
             print("\n" + "=" * 60)
-            print("预订已完成！")
-            print(f"航班：从 {from_airport} 到 {to_airport}")
-            print(f"酒店：{hotel_name}")
+            print("预订已完成!")
+            print(f"航班:从 {from_airport} 到 {to_airport}")
+            print(f"酒店:{hotel_name}")
             print("=" * 60)
     except Exception as e:
         print(f"\n处理过程中出现错误: {e}")
@@ -166,54 +166,54 @@ def main():
         print(flight_result)
         print(hotel_result)
 
-    print("\n感谢使用智能旅行预订系统！")
+    print("\n感谢使用智能旅行预订系统!")
 
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n程序被用户中断。")
+        print("\n\n程序被用户中断.")
     except Exception as e:
         print(f"\n系统出现错误: {e}")
 
 
 """
-【输出示例】
+[输出示例]
 ============================================================
 智能旅行预订系统
 ============================================================
 
-请按顺序提供以下信息：
+请按顺序提供以下信息:
 ----------------------------------------
-1. 您的出发机场是哪里？: 北京
+1. 您的出发机场是哪里?: 北京
 
-2. 您的到达机场是哪里？: 厦门
+2. 您的到达机场是哪里?: 厦门
 
-3. 您要预订的酒店名称是什么？: 厦门喜来登
+3. 您要预订的酒店名称是什么?: 厦门喜来登
 
 ============================================================
 正在处理您的预订请求...
 ============================================================
 
-supervisor: 请帮我预订以下旅行安排：
-1 航班：从 北京 飞往 厦门
-2 酒店：厦门喜来登
-请完成这两个预订。
-flight_assistant: 航班已成功预订！关于酒店预订厦门喜来登，当前工具不支持酒店预订功能。建议您通过酒店官网、旅行平台如携程、飞猪或联系酒店前台完成预订。如需其他帮助，请随时告诉我！
-supervisor: 航班已成功预订！关于酒店预订厦门喜来登，当前工具不支持酒店预订功能。建议您通过酒店官网、旅行平台如携程、飞猪或联系酒店前台完成预订。如需其他帮助，请随时告诉我！
+supervisor: 请帮我预订以下旅行安排:
+1 航班:从 北京 飞往 厦门
+2 酒店:厦门喜来登
+请完成这两个预订.
+flight_assistant: 航班已成功预订!关于酒店预订厦门喜来登,当前工具不支持酒店预订功能.建议您通过酒店官网,旅行平台如携程,飞猪或联系酒店前台完成预订.如需其他帮助,请随时告诉我!
+supervisor: 航班已成功预订!关于酒店预订厦门喜来登,当前工具不支持酒店预订功能.建议您通过酒店官网,旅行平台如携程,飞猪或联系酒店前台完成预订.如需其他帮助,请随时告诉我!
 supervisor: 正在为您协调航班与酒店预订  
-首先已调用航班助手完成北京至厦门的航班预订；  
-接下来将调用酒店助手为您预订厦门喜来登酒店。
-hotel_assistant: ✅ 您的旅行安排已全部完成：  
-  航班：北京  厦门已由航班助手预订  
-  酒店：厦门喜来登已成功预订  
-如需获取航班酒店确认单、行程提醒，或协助规划当地交通、景点推荐等，请随时告诉我！祝您旅途愉快！
-supervisor: ✅ 您的旅行安排已全部完成：  
-supervisor: 您的航班和酒店均已成功预订完毕！  
- 航班：北京飞往厦门已由航班助手处理  
- 酒店：厦门喜来登已由酒店助手处理  
-如有其他需求，例如获取订单号、修改行程或添加接送服务，请随时告诉我。祝您旅途顺利、愉快！
+首先已调用航班助手完成北京至厦门的航班预订;  
+接下来将调用酒店助手为您预订厦门喜来登酒店.
+hotel_assistant: ✅ 您的旅行安排已全部完成:  
+  航班:北京  厦门已由航班助手预订  
+  酒店:厦门喜来登已成功预订  
+如需获取航班酒店确认单,行程提醒,或协助规划当地交通,景点推荐等,请随时告诉我!祝您旅途愉快!
+supervisor: ✅ 您的旅行安排已全部完成:  
+supervisor: 您的航班和酒店均已成功预订完毕!  
+ 航班:北京飞往厦门已由航班助手处理  
+ 酒店:厦门喜来登已由酒店助手处理  
+如有其他需求,例如获取订单号,修改行程或添加接送服务,请随时告诉我.祝您旅途顺利,愉快!
 
-感谢使用智能旅行预订系统！
+感谢使用智能旅行预订系统!
 """

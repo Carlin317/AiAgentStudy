@@ -1,11 +1,11 @@
-“””
-【案例 05-3】条件边（Conditional Edges）：根据状态在多个后继节点中选一个执行
+"""
+[案例 05-3]条件边(Conditional Edges):根据状态在多个后继节点中选一个执行
 
-知识点速览：
-- add_conditional_edges(source, route_fn, mapping)：route_fn(state) 返回值作为 key，在 mapping 中查到下一节点名。
-- 条件边让边负责分流，而非把 if/else 塞回节点里；路由函数在 source 节点执行后被调用。
-- State 也可以用 Pydantic BaseModel 定义，支持默认值和校验。
-“””
+知识点速览:
+- add_conditional_edges(source, route_fn, mapping):route_fn(state) 返回值作为 key,在 mapping 中查到下一节点名.
+- 条件边让边负责分流,而非把 if/else 塞回节点里;路由函数在 source 节点执行后被调用.
+- State 也可以用 Pydantic BaseModel 定义,支持默认值和校验.
+"""
 
 from typing import Optional
 from langgraph.constants import START, END
@@ -26,7 +26,7 @@ def check_x(state: MyState) -> MyState:
 
 
 def is_even(state: MyState) -> bool:
-    """路由函数：返回 True/False 供条件边分流。"""
+    """路由函数:返回 True/False 供条件边分流."""
     return state.x % 2 == 0
 
 
@@ -59,15 +59,15 @@ builder.add_edge("handle_odd", END)
 graph = builder.compile()
 print(graph.get_graph().print_ascii())
 
-logger.info("输入 x=4（偶数）")
+logger.info("输入 x=4(偶数)")
 graph.invoke(MyState(x=4))
 
 # 测试奇数
-# logger.info("输入 x=3（奇数）")
+# logger.info("输入 x=3(奇数)")
 # graph.invoke(MyState(x=3))
 
 """
-【输出示例】
+[输出示例]
               +-----------+               
               | __start__ |               
               +-----------+               
@@ -90,7 +90,7 @@ graph.invoke(MyState(x=4))
                | __end__ |                
                +---------+                
 None
-2026-03-23 16:38:23.954 | INFO     | __main__:<module>:108 - 输入 x=4（偶数）
+2026-03-23 16:38:23.954 | INFO     | __main__:<module>:108 - 输入 x=4(偶数)
 2026-03-23 16:38:23.955 | INFO     | __main__:check_x:40 - [check_x] Received state: x=4 result=None
 2026-03-23 16:38:23.955 | INFO     | __main__:handle_even:65 - [handle_even] x 是偶数
 """

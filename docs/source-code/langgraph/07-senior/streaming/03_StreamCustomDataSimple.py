@@ -1,12 +1,12 @@
-“””
-【案例 07-3】自定义流（custom）最简版：节点内通过 get_stream_writer() 写入任意可序列化数据，stream 侧用 custom 接收。
+"""
+[案例 07-3]自定义流(custom)最简版:节点内通过 get_stream_writer() 写入任意可序列化数据,stream 侧用 custom 接收.
 
-对应教程章节：第 25 章 - LangGraph 高级特性 → 1、流式处理（Streaming）
+对应教程章节:第 25 章 - LangGraph 高级特性 → 1,流式处理(Streaming)
 
-知识点速览：
-- get_stream_writer() 仅在 stream/astream 执行过程中有效；stream_mode 须包含 “custom”。
-- 自定义块与状态更新是两条独立通道：前者适合 UI/日志/进度提示，后者通过 State 和 Reducer 管理。
-“””
+知识点速览:
+- get_stream_writer() 仅在 stream/astream 执行过程中有效;stream_mode 须包含 "custom".
+- 自定义块与状态更新是两条独立通道:前者适合 UI/日志/进度提示,后者通过 State 和 Reducer 管理.
+"""
 
 from typing import TypedDict
 
@@ -21,7 +21,7 @@ class State(TypedDict):
 
 def node(state: State):
     writer = get_stream_writer()
-    writer({"custom_key": "欢迎来到线上Agent班级学习，O(∩_∩)O"})
+    writer({"custom_key": "欢迎来到线上Agent班级学习,O(∩_∩)O"})
     return {"answer": "some data"}
 
 
@@ -42,8 +42,8 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 ('values', {'query': 'example'})
-('custom', {'custom_key': '欢迎来到线上Agent班级学习，O(∩_∩)O'})
+('custom', {'custom_key': '欢迎来到线上Agent班级学习,O(∩_∩)O'})
 ('values', {'query': 'example', 'answer': 'some data'})
 """

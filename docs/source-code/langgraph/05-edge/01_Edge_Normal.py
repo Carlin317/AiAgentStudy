@@ -1,10 +1,10 @@
-“””
-【案例 05-1】普通边（Normal Edges）：用 add_edge 串联节点，固定执行顺序，无条件跳转
+"""
+[案例 05-1]普通边(Normal Edges):用 add_edge 串联节点,固定执行顺序,无条件跳转
 
-知识点速览：
-- add_edge(源节点, 目标节点)：执行完源节点后必定进入目标节点，无分支。
-- START、END 为内置虚拟节点，分别表示图入口与出口。
-“””
+知识点速览:
+- add_edge(源节点, 目标节点):执行完源节点后必定进入目标节点,无分支.
+- START,END 为内置虚拟节点,分别表示图入口与出口.
+"""
 
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === 普通边演示 ===
 执行节点A
 执行节点B

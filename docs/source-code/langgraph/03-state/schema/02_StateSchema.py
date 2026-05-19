@@ -1,11 +1,11 @@
-“””
-【案例 03-2】图的输入/输出 Schema：用 input_schema 和 output_schema 限制调用方只能传 question、返回时只拿 answer
+"""
+[案例 03-2]图的输入/输出 Schema:用 input_schema 和 output_schema 限制调用方只能传 question,返回时只拿 answer
 
-知识点速览：
-- OverallState 是内部完整 State Schema，InputState / OutputState 是图对外暴露的输入输出契约。
-- StateGraph(OverallState, input_schema=InputState, output_schema=OutputState)：第一个参数描述内部完整状态，后两个限制边界 I/O。
-- 节点内部围绕完整状态空间工作；只有「图的边界」受 input/output 约束。
-“””
+知识点速览:
+- OverallState 是内部完整 State Schema,InputState / OutputState 是图对外暴露的输入输出契约.
+- StateGraph(OverallState, input_schema=InputState, output_schema=OutputState):第一个参数描述内部完整状态,后两个限制边界 I/O.
+- 节点内部围绕完整状态空间工作;只有"图的边界"受 input/output 约束.
+"""
 
 from langgraph.graph import StateGraph, START, END
 from typing_extensions import TypedDict
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     main()
 
 """
-【输出示例】
+[输出示例]
 === LangGraph 图输入输出模式===
 
 === 演示输入输出模式 ===

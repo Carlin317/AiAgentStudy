@@ -1,12 +1,12 @@
 """
-【案例 09-4】DashScope 多模态 Embedding：文本/图像向量化（进阶）
+[案例 09-4]DashScope 多模态 Embedding:文本/图像向量化(进阶)
 
-知识点速览：
-- 多模态嵌入模型可同时处理文本和图像，input 列表项可为 {"text": "..."} 或 {"image": "url"}
-- 返回结构与单模态类似，output.embeddings 为列表，每项含 embedding 向量
-- 本例只演示文本输入，图像输入通常需要 URL 或 base64
+知识点速览:
+- 多模态嵌入模型可同时处理文本和图像,input 列表项可为 {"text": "..."} 或 {"image": "url"}
+- 返回结构与单模态类似,output.embeddings 为列表,每项含 embedding 向量
+- 本例只演示文本输入,图像输入通常需要 URL 或 base64
 
-模型文档：https://bailian.console.aliyun.com/?productCode=p_efm&tab=model#/model-market/all?capabilities=ME
+模型文档:https://bailian.console.aliyun.com/?productCode=p_efm&tab=model#/model-market/all?capabilities=ME
 """
 
 import dashscope
@@ -16,7 +16,7 @@ from http import HTTPStatus
 from dotenv import load_dotenv
 
 load_dotenv()
-# MultiModalEmbedding.call 内部用 get_default_api_key()，必须提前设置
+# MultiModalEmbedding.call 内部用 get_default_api_key(),必须提前设置
 dashscope.api_key = os.getenv("aliQwen-api")
 
 # ========== 1. 调用多模态 Embedding 接口 ==========

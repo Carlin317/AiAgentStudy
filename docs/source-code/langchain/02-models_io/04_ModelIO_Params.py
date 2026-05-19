@@ -1,13 +1,13 @@
-“””
-【案例 02-4】模型标准化参数：temperature、max_tokens 等
+"""
+[案例 02-4]模型标准化参数:temperature,max_tokens 等
 
-对应教程章节：第 11 章 - Model I/O 与模型接入 → 2.5 常用模型参数、2.6 Token、max_tokens 与计费的关系、2.9 调用后的返回信息
+对应教程章节:第 11 章 - Model I/O 与模型接入 → 2.5 常用模型参数,2.6 Token,max_tokens 与计费的关系,2.9 调用后的返回信息
 
-知识点速览：
-- temperature 影响输出随机性（0 确定，越大越随机），通常取 0~2
+知识点速览:
+- temperature 影响输出随机性(0 确定,越大越随机),通常取 0~2
 - max_tokens 控制单次回复长度上限
 - 返回值 AIMessage 包含 content / response_metadata / usage_metadata
-“””
+"""
 
 # ========== 1. 导入与环境 ==========
 import os
@@ -23,32 +23,32 @@ model = init_chat_model(
     model_provider="openai",
     api_key=os.getenv("deepseek-api"),
     base_url="https://api.deepseek.com",
-    temperature=0.7,  # 0～1，越高越随机；此处略高便于看到多次输出差异
-    # max_tokens=256,  # 可选：限制单次回复长度
+    temperature=0.7,  # 0～1,越高越随机;此处略高便于看到多次输出差异
+    # max_tokens=256,  # 可选:限制单次回复长度
 )
 
-# 观察 AIMessage 结构：content / response_metadata / usage_metadata
-print(model.invoke("写一句关于春天的词，14 字以内"))
+# 观察 AIMessage 结构:content / response_metadata / usage_metadata
+print(model.invoke("写一句关于春天的词,14 字以内"))
 print(type(model))       # ChatOpenAI
-print(type(model.invoke("写一句关于春天的词，14 字以内").content))  # str
-print(type(model.invoke("写一句关于春天的词，14 字以内")))         # AIMessage
+print(type(model.invoke("写一句关于春天的词,14 字以内").content))  # str
+print(type(model.invoke("写一句关于春天的词,14 字以内")))         # AIMessage
 
 # ========== 3. 多次调用观察 temperature 对多样性的影响 ==========
 for i in range(3):
     print(f"--- 第 {i + 1} 次 ---")
-    print(model.invoke("写一句关于春天的词，14 字以内").content)
+    print(model.invoke("写一句关于春天的词,14 字以内").content)
 
 
 """
-【输出示例】温度为 2.0 时，输出如下结果
-莺惊柳浪春犁响，一鞭云水碧
-**诗家酥雨润，闲趁卖花声。**
-寒威已退先春雨，万枝吐翠流云间。
+[输出示例]温度为 2.0 时,输出如下结果
+莺惊柳浪春犁响,一鞭云水碧
+**诗家酥雨润,闲趁卖花声.**
+寒威已退先春雨,万枝吐翠流云间.
 """
 
 """
-【输出示例】温度为 0 时，输出如下结果
-风软一溪云，花明两岸春。
-风软一溪云，花明两岸春。
-风软一溪云，花明两岸春。
+[输出示例]温度为 0 时,输出如下结果
+风软一溪云,花明两岸春.
+风软一溪云,花明两岸春.
+风软一溪云,花明两岸春.
 """

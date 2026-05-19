@@ -1,12 +1,12 @@
-“””
-【案例 04-7】模型调用：异步 abatch（异步批量调用）
+"""
+[案例 04-7]模型调用:异步 abatch(异步批量调用)
 
-对应教程章节：第 13 章 - 提示词与消息模板 → 4、调用大模型的调用方式
+对应教程章节:第 13 章 - 提示词与消息模板 → 4,调用大模型的调用方式
 
-知识点速览：
-- abatch 是 batch 的异步版本，用于异步任务体系中的批处理
-- 在 async 函数内 await model.abatch(...)，返回顺序与输入一一对应
-“””
+知识点速览:
+- abatch 是 batch 的异步版本,用于异步任务体系中的批处理
+- 在 async 函数内 await model.abatch(...),返回顺序与输入一一对应
+"""
 
 import os
 import asyncio
@@ -25,19 +25,19 @@ model = init_chat_model(
 
 # ========== 2. 准备批量问题 ==========
 questions = [
-    "什么是redis?简洁回答，字数控制在100以内",
-    "Python的生成器是做什么的？简洁回答，字数控制在100以内",
-    "解释一下Docker和Kubernetes的关系?简洁回答，字数控制在100以内",
+    "什么是redis?简洁回答,字数控制在100以内",
+    "Python的生成器是做什么的?简洁回答,字数控制在100以内",
+    "解释一下Docker和Kubernetes的关系?简洁回答,字数控制在100以内",
 ]
 
 
 # ========== 3. 异步批量调用 ==========
 async def async_batch_call():
     response = await model.abatch(questions)
-    print(f"响应类型：{type(response)}")
+    print(f"响应类型:{type(response)}")
 
     for q, r in zip(questions, response):
-        print(f"问题：{q}\n回答：{r.content}\n")
+        print(f"问题:{q}\n回答:{r.content}\n")
 
 
 # ========== 4. 运行异步函数 ==========
@@ -45,14 +45,14 @@ if __name__ == "__main__":
     asyncio.run(async_batch_call())
 
 """
-【输出示例】
-响应类型：<class 'list'>
-问题：什么是redis?简洁回答，字数控制在100以内
-回答：Redis 是一个开源的、基于内存的高性能键值数据库，支持字符串、哈希、列表、集合等多种数据结构，提供持久化、主从复制、事务、发布/订阅等功能，常用于缓存、消息队列、会话存储等场景。
+[输出示例]
+响应类型:<class 'list'>
+问题:什么是redis?简洁回答,字数控制在100以内
+回答:Redis 是一个开源的,基于内存的高性能键值数据库,支持字符串,哈希,列表,集合等多种数据结构,提供持久化,主从复制,事务,发布/订阅等功能,常用于缓存,消息队列,会话存储等场景.
 
-问题：Python的生成器是做什么的？简洁回答，字数控制在100以内
-回答：Python生成器是一种惰性迭代器，用`yield`关键字定义，可逐个生成值而非一次性返回全部结果。它节省内存、支持无限序列，并在每次调用`next()`时暂停/恢复执行。
+问题:Python的生成器是做什么的?简洁回答,字数控制在100以内
+回答:Python生成器是一种惰性迭代器,用`yield`关键字定义,可逐个生成值而非一次性返回全部结果.它节省内存,支持无限序列,并在每次调用`next()`时暂停/恢复执行.
 
-问题：解释一下Docker和Kubernetes的关系?简洁回答，字数控制在100以内
-回答：Docker 是容器运行时，负责打包、构建和运行单个容器；Kubernetes（K8s）是容器编排平台，用于自动化部署、扩缩容、调度和管理大规模容器集群。Docker 为 Kubernetes 提供底层容器支持（如镜像和运行时），而 Kubernetes 可管理多个 Docker 容器（或其他兼容运行时，如 containerd）。二者常配合使用：Docker 构建镜像，K8s 编排运行。
+问题:解释一下Docker和Kubernetes的关系?简洁回答,字数控制在100以内
+回答:Docker 是容器运行时,负责打包,构建和运行单个容器;Kubernetes(K8s)是容器编排平台,用于自动化部署,扩缩容,调度和管理大规模容器集群.Docker 为 Kubernetes 提供底层容器支持(如镜像和运行时),而 Kubernetes 可管理多个 Docker 容器(或其他兼容运行时,如 containerd).二者常配合使用:Docker 构建镜像,K8s 编排运行.
 """

@@ -1,12 +1,12 @@
 """
-【案例 07-3】自动管理对话历史（单会话）：RunnableWithMessageHistory + InMemoryChatMessageHistory
+[案例 07-3]自动管理对话历史(单会话):RunnableWithMessageHistory + InMemoryChatMessageHistory
 
-对应教程章节：第 16 章 - 记忆与对话历史 → 6、案例代码 → 6.1 内存版
+对应教程章节:第 16 章 - 记忆与对话历史 → 6,案例代码 → 6.1 内存版
 
-知识点速览：
-- RunnableWithMessageHistory 在 invoke 时自动完成：取历史 → 拼入 Prompt → 执行链 → 写回历史
-- InMemoryChatMessageHistory 数据存在进程内存，重启即丢失
-- 本例固定返回同一个 history，仅演示单会话连续对话
+知识点速览:
+- RunnableWithMessageHistory 在 invoke 时自动完成:取历史 → 拼入 Prompt → 执行链 → 写回历史
+- InMemoryChatMessageHistory 数据存在进程内存,重启即丢失
+- 本例固定返回同一个 history,仅演示单会话连续对话
 - 多 session 写法见 Memory_RunnableWithMessageHistoryV2.py
 """
 
@@ -52,5 +52,5 @@ history.clear()
 config = RunnableConfig(configurable={"session_id": "user-001"})
 
 # ========== 3. 多轮对话 ==========
-logger.info(runnable.invoke({"input": "我叫张三，我爱好学习。"}, config))
-logger.info(runnable.invoke({"input": "我叫什么？我的爱好是什么？"}, config))
+logger.info(runnable.invoke({"input": "我叫张三,我爱好学习."}, config))
+logger.info(runnable.invoke({"input": "我叫什么?我的爱好是什么?"}, config))

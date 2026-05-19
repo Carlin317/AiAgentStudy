@@ -1,13 +1,13 @@
-“””
-【案例 04-9】文本提示词模板：用构造函数创建 PromptTemplate
+"""
+[案例 04-9]文本提示词模板:用构造函数创建 PromptTemplate
 
-对应教程章节：第 13 章 - 提示词与消息模板 → 6、文本提示词模板（PromptTemplate）
+对应教程章节:第 13 章 - 提示词与消息模板 → 6,文本提示词模板(PromptTemplate)
 
-知识点速览：
-- 构造函数需显式写出 template 和 input_variables，变量边界更清楚
-- 格式化后得到字符串，可直接作为模型输入
-- 同一模板可复用，换不同参数得到不同提示词
-“””
+知识点速览:
+- 构造函数需显式写出 template 和 input_variables,变量边界更清楚
+- 格式化后得到字符串,可直接作为模型输入
+- 同一模板可复用,换不同参数得到不同提示词
+"""
 
 import os
 
@@ -19,13 +19,13 @@ load_dotenv()
 
 # ========== 1. 用构造函数创建模板 ==========
 template = PromptTemplate(
-    template="你是一个专业的{role}工程师，请回答我的问题给出回答，我的问题是：{question}",
+    template="你是一个专业的{role}工程师,请回答我的问题给出回答,我的问题是:{question}",
     input_variables=["role", "question"],
 )
 
 # ========== 2. format 填入占位符 ==========
 prompt = template.format(
-    role="python开发", question="冒泡排序怎么写,只要代码其它不要，简洁"
+    role="python开发", question="冒泡排序怎么写,只要代码其它不要,简洁"
 )
 print(prompt)
 
@@ -42,7 +42,7 @@ print("\n\n")
 
 # ========== 4. 同一模板复用 ==========
 template = PromptTemplate(
-    template="请评价{product}的优缺点，包括{aspect1}和{aspect2}。",
+    template="请评价{product}的优缺点,包括{aspect1}和{aspect2}.",
     input_variables=["product", "aspect1", "aspect2"],
 )
 prompt_1 = template.format(product="智能手机", aspect1="电池续航", aspect2="拍照质量")
@@ -52,8 +52,8 @@ print(prompt_2)
 
 
 """
-【输出示例】
-你是一个专业的python开发工程师，请回答我的问题给出回答，我的问题是：冒泡排序怎么写,只要代码其它不要，简洁
+[输出示例]
+你是一个专业的python开发工程师,请回答我的问题给出回答,我的问题是:冒泡排序怎么写,只要代码其它不要,简洁
 ```python
 def bubble_sort(arr):
     n = len(arr)
@@ -65,6 +65,6 @@ def bubble_sort(arr):
 ```
 
 
-# 请评价智能手机的优缺点，包括电池续航和拍照质量。
-# 请评价笔记本电脑的优缺点，包括处理速度和便携性。
+# 请评价智能手机的优缺点,包括电池续航和拍照质量.
+# 请评价笔记本电脑的优缺点,包括处理速度和便携性.
 """
